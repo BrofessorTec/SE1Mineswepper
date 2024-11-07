@@ -1,0 +1,37 @@
+.cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #888;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .cell.revealed {
+    background-color: #ddd;
+    cursor: default;
+  }
+  
+  .cell.empty {
+    background-color: #eee; /* Different background for empty cells */
+  }
+  
+  .cell.mine {
+    background-color: #f00;
+  }
+  
+  .cell.flagged {
+    background-color: #ffcc00;
+    color: #000;
+  }
+  
+  .cell:hover {
+    background-color: #bbb;
+  }
+  
+  #game-board {
+    display: grid;
+    gap: 1px;
+  }
+  
