@@ -7,7 +7,8 @@ const gridCols = 10;
 
 /*
 // function to create a 2D array of objects/elements that can populate the cells. 
-function create2DArray(rows, cols) {
+function create2DArray(rows, cols) 
+{
   const arr = [];
   
   // outer loop for rows
@@ -31,7 +32,8 @@ function create2DArray(rows, cols) {
 */
 
 // function to initialize the game grid (just printing the grid)
-function initializeGame() {
+function initializeGame() 
+{
   gameBoard.innerHTML = '';  // clear the game board
 
   // set the grid template for the CSS grid layout
