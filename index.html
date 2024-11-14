@@ -1,19 +1,37 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Game Board Test</title>
- 
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <link rel="stylesheet" href="style.css">
-  </head>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mineswepper Game</title>
+  <link rel="stylesheet" href="style.css">
 
-  <body>
-    <h1>Game Board Test</h1>
-    <div id="game-board" >
-    
+</head>
+<body>
+  
+  <h1>Mineswepper</h1>
+  
+  <!-- div where the game and UI will be displayed -->
+  <div id="game-board" class="game-board">
+    <!-- div for UI at the top of the screen -->
+    <div class="top">
+
     </div>
+    <!-- div where the game itself will be placed in the center of the board-->
+    <div class="game">
 
-    <script src="Mineswepper.js"></script>
-  </body>
+    </div>
+    <!-- div for more UI at the bottom of the frame-->
+    <div class="bottom">
+
+    </div>
+  </div>
+  
+  <p class="group-name">
+    Christian Rock, Scotty Snyder, Tyler Campbell, Gavin Frisby, Zach Farmer, Chris Powers, and Nathan Mink
+  </p>
+  
+  <script src="Mineswepper.js"></script>
+</body>
 </html>
+
