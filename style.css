@@ -43,3 +43,21 @@ h1 {
     text-align: center;
     margin-top: 5%;
 }
+
+.cell {
+    width: 40px;
+    height: 40px;
+    border: 1px solid #888;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+ /*
+ Had to add to test if board could read mouse hover
+ */
+  .cell:hover {
+    background-color: #bbb;
+  }
+
