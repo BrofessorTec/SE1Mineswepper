@@ -1,0 +1,45 @@
+/* style.css
+    Author:         Scotty Snyder (if you add to this file in the future just add your name here and update last revised)	      			
+    Date:		    11/14/24
+    Last revised:   11/14/24
+    Description:    Mineswepper stylesheet
+*/
+
+/* centers the game name and developer names */
+h1 {
+    text-align: center;
+    margin: 20px 0px 50px auto;
+}
+
+/* Centers div, sets it to a size of 400 x 400, and creates a border for the div */
+.game-board {
+    width: 400px;
+    height: 800px;
+    margin: auto;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    box-shadow: 5px 5px 5px lightgrey; /* creates a shadow for the game frame */
+}
+
+.game {
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    border-width: 2px 0px 2px 0px;
+    border-color: black;
+    border-style: solid;
+}
+
+.top, .bottom {
+    width: 400px;
+    height: 200px;
+    margin: auto;
+}
+
+
+/* pushes the team name to the bottom of the screen */
+.group-name {
+    text-align: center;
+    margin-top: 5%;
+}
