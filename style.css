@@ -22,6 +22,7 @@ h1 {
     box-shadow: 5px 5px 5px lightgrey; /* creates a shadow for the game frame */
 }
 
+/* seperates out the div where the game will be placed on the page */
 .game {
     width: 400px;
     height: 400px;
@@ -31,6 +32,7 @@ h1 {
     border-style: solid;
 }
 
+/* maintains previously determined sizes for top and bottom divs, used for UI, timer, etc. */
 .top, .bottom {
     width: 400px;
     height: 200px;
