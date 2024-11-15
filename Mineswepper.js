@@ -11,7 +11,8 @@ function initializeGame()
   gameBoard.innerHTML = '';  // clear the game board
 
   // set the grid template for the CSS grid layout - can be altered later if needed for dynamic game board size
-  gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 42px)`;
+  gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`; 
+  gameBoard.style.gridTemplateRows = `repeat(${gridRows}, 39px)`;
 
   // create the grid cells in the DOM using nested for loops 
   for (let row = 0; row < gridRows; row++) 
@@ -31,7 +32,7 @@ function initializeGame()
 
 }
 
-// call initializeGameBoard to create the grid
+// call initializegame to create the grid
 initializeGame();
 
 

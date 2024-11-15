@@ -12,7 +12,7 @@ h1 {
 }
 
 /* Centers div, sets it to a size of 400 x 400, and creates a border for the div */
-.game-board {
+.frame {
     width: 400px;
     height: 800px;
     margin: auto;
@@ -23,13 +23,15 @@ h1 {
 }
 
 /* seperates out the div where the game will be placed on the page */
-.game {
+.game-board {
     width: 400px;
     height: 400px;
     margin: auto;
     border-width: 2px 0px 2px 0px;
     border-color: black;
     border-style: solid;
+    display: grid;  /* added grid layout */
+    gap: 1px;  
 }
 
 /* maintains previously determined sizes for top and bottom divs, used for UI, timer, etc. */
@@ -47,8 +49,8 @@ h1 {
 }
 
 .cell {
-    width: 40px;
-    height: 40px;
+    width: 39px;
+    height: 39px;
     border: 1px solid #888;
     text-align: center;
     line-height: 40px;
