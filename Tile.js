@@ -25,11 +25,13 @@ class Tile {
 function create2DArray(rows, cols) 
 {
     const arr = new Array(rows); // creates an array of rows
+    console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // log dimensions
     for (let i = 0; i < rows; i++) {
       arr[i] = new Array(cols); // create each row array with the number of columns
+      console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
       for (let j = 0; j < cols; j++) {
         arr[i][j] = new Tile(); // assign a new Tile object to each column index
-        console.log("Row =" + i + " Col = " + j)
+        console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
       }
     }
     return arr;
