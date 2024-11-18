@@ -113,7 +113,7 @@ h1 {
     text-align: center;
     margin-top: 20px;
 }
-.rules-button {
+.nav-button {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -123,7 +123,7 @@ h1 {
     font-size: 1em;
     transition: background-color 0.3s ease;
 }
-.rules-button:hover {
+.nav-button:hover {
     background-color: #0056b3;
 }
 
