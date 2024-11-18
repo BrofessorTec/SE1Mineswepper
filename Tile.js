@@ -6,16 +6,19 @@ class Tile {
       this.flagged = false;  // is the tile flagged?
       this.adjacentMines = 0; // number of mines adjacent to the tile
     }
-  
-    setMine() {
+    // method to set mine
+    setMine() 
+    {
       this.mine = true;
     }
-  
-    reveal() {
+    // method to mark as revealed
+    reveal() 
+    {
       this.revealed = true;
     }
-  
-    toggleFlag() {
+    //method to mark as flagged
+    toggleFlag() 
+    {
       this.flagged = !this.flagged;
     } 
   } 
