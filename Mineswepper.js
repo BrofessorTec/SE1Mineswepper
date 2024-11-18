@@ -25,6 +25,31 @@ function initializeGame()
       console.log(row); // testing log statement can be removed 
       cell.dataset.col = col;
       console.log(col); // testing log statement can be removed 
+      cell.revealed = false; //using this variable so that cells cannot be clicked multiple times
+
+      // Add event listener for each cell to detect mouse click interaction
+      cell.addEventListener('click', () => {
+        // Adds correct symbol based on game rules
+        if (!cell.revealed)
+        {
+          const randomNum = Math.floor(Math.random() * 10); //to be replaced later with game logic
+          if (randomNum < 9)
+          {
+            cell.textContent = randomNum; //to be replaced later with game logic
+          }
+          else
+          {
+            cell.textContent = "💣"
+          }
+          cell.style.textAlign = 'center'; // Center the text
+          cell.style.fontSize = '24px'; // Adjust font size
+          cell.style.lineHeight = '39px'; // Match the cell height
+          cell.revealed = true;
+        }
+      });
+
+
+      
       gameBoard.appendChild(cell);
     }
     
@@ -34,6 +59,8 @@ function initializeGame()
 
 // call initializegame to create the grid
 initializeGame();
+
+
 
 
 
