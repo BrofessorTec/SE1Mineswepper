@@ -20,7 +20,7 @@ function initializeGame()
 
   if (difficulty == 1) 
     {
-      //generate 10 bomb locations
+      //generate 10 bomb locations, can be updated later with different difficulties
       bombsCount = 10;
       for (let bombPlanted = 0; bombPlanted < bombsCount; bombPlanted++)
         {
@@ -53,17 +53,17 @@ function initializeGame()
         // Adds correct symbol based on game rules
         if (!cell.revealed)
         {
-          console.log("Current location is " + ((row+1)+(col*10))); // cells were generated per column
+          currentLocation = (row+1)+(col*10);
+          console.log("Current location is " + currentLocation); // cells were generated per column
 
-          const randomNum = Math.floor(Math.random() * 10); //to be replaced later with game logic
-          if (randomNum < 9)
-          {
-            cell.textContent = randomNum; //to be replaced later with game logic
-          }
-
-          if (bombSpots.includes((row+1)+(col*10))) //new bomb placement logic
+          if (bombSpots.includes(currentLocation)) //new bomb placement logic
           {
             cell.textContent = "💣"
+          }
+          else
+          {
+            const randomNum = Math.floor(Math.random() * 9); //to be replaced later with game logic
+            cell.textContent = randomNum; //to be replaced later with game logic
           }
 
           cell.style.textAlign = 'center'; // Center the text
