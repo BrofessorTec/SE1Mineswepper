@@ -1,7 +1,7 @@
 /* style.css
-    Author:         Scotty Snyder (if you add to this file in the future just add your name here and update last revised)	      			
+    Author:         Scotty Snyder, Chris Powers (if you add to this file in the future just add your name here and update last revised)	      			
     Date:		    11/14/24
-    Last revised:   11/14/24
+    Last revised:   11/17/24
     Description:    Mineswepper stylesheet
 */
 
@@ -64,4 +64,67 @@ h1 {
   .cell:hover {
     background-color: #bbb;
   }
+
+
+/* Ruleset page styling */
+.rules-container {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    line-height: 1.6;
+}
+.rules-container h4 {
+    font-size: 1.6em;
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+.rules-container p {
+    margin: 10px 0;
+    text-align: justify;
+}
+.rules-container ul {
+    padding-left: 20px;
+    margin: 10px 0;
+}
+.rules-container ul li {
+    margin-bottom: 8px;
+    list-style-type: disc;
+}
+.highlight {
+    font-weight: bold;
+    color: #d32f2f;
+}
+.tip {
+    background: #e3f2fd;
+    padding: 10px;
+    border-left: 4px solid #2196f3;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+/* Temp ruleset button styling*/
+.temporary-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+.rules-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+.rules-button:hover {
+    background-color: #0056b3;
+}
+
 
