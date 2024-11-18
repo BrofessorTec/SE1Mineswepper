@@ -25,7 +25,12 @@ function initializeGame()
       for (let bombPlanted = 0; bombPlanted < bombsCount; bombPlanted++)
         {
           gridMax = gridCols * gridRows;
-          const bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
+          bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
+          while (bombSpots.includes(bombLocation))
+          {
+            //generate another location if there is already a bomb in this spot
+            bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
+          }
           bombSpots.push(bombLocation);
           console.log("Bomb placed at " + bombLocation);
         } 
