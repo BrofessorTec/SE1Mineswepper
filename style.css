@@ -138,4 +138,23 @@ h1 {
     background-color: #0056b3;
 }
 
+#restart-button {
+    position: relative;
+    top: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    font-size: 16px;
+    color: white;
+    background-color: #007BFF; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  #restart-button:hover {
+    background-color: #0056b3; 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
+  }
 
