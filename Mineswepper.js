@@ -84,6 +84,16 @@ function initializeGame()
 
 }
 
+// Function to restart the game
+function restartGame() {
+  // Clear and reinitialize the game board
+  console.log("Game restarted");
+  initializeGame();
+}
+
+// Add this restart functionality to the "Restart Game" button
+document.getElementById("restart-button").addEventListener("click", restartGame);
+
 // call initializegame to create the grid
 initializeGame();
 
