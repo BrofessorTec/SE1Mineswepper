@@ -1,0 +1,160 @@
+/* style.css
+    Author:         Scotty Snyder, Chris Powers, Nathan Mink (if you add to this file in the future just add your name here and update last revised)	      			
+    Date:		    11/14/24
+    Last revised:   11/18/24
+    Description:    Mineswepper stylesheet
+*/
+
+/* centers the game name and developer names */
+h1 {
+    text-align: center;
+    margin: 20px 0px 50px auto;
+}
+
+/* Centers div, sets it to a size of 400 x 400, and creates a border for the div */
+.frame {
+    width: 400px;
+    height: 800px;
+    margin: auto;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+    box-shadow: 5px 5px 5px lightgrey; /* creates a shadow for the game frame */
+}
+
+/* seperates out the div where the game will be placed on the page */
+.game-board {
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    border-width: 2px 0px 2px 0px;
+    border-color: black;
+    border-style: solid;
+    display: grid;  /* added grid layout */
+    gap: 1px;  
+}
+
+/* maintains previously determined sizes for top and bottom divs, used for UI, timer, etc. */
+.top, .bottom {
+    width: 400px;
+    height: 200px;
+    margin: auto;
+    background-color: #C0C0C0;
+}
+
+
+/* pushes the team name to the bottom of the screen */
+.group-name {
+    text-align: center;
+    margin-top: 5%;
+}
+
+.cell {
+    width: 39px;
+    height: 39px;
+    border: 1px solid #000000;
+    text-align: center;
+    line-height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    background-color: #808080;
+  }
+  
+ /*
+ Had to add to test if board could read mouse hover
+ */
+  .cell:hover {
+    background-color: #bbb;
+  }
+
+/* Changes background color for revealed cells */
+.cell.revealed {
+    background-color: #C0C0C0;
+}
+
+/* Changes background color for cell that contains a bomb */
+.cell.bomb {
+    background-color: #d80c0c;
+}
+
+/* Ruleset page styling */
+.rules-container {
+    background: #ffffff;
+    padding: 30px 40px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    line-height: 1.6;
+}
+.rules-container h4 {
+    font-size: 1.6em;
+    text-align: center;
+    color: #333;
+    margin-bottom: 15px;
+}
+.rules-container p {
+    margin: 10px 0;
+    text-align: justify;
+}
+.rules-container ul {
+    padding-left: 20px;
+    margin: 10px 0;
+}
+.rules-container ul li {
+    margin-bottom: 8px;
+    list-style-type: disc;
+}
+.highlight {
+    font-weight: bold;
+    color: #d32f2f;
+}
+.tip {
+    background: #e3f2fd;
+    padding: 10px;
+    border-left: 4px solid #2196f3;
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+/* Temp ruleset button styling*/
+.temporary-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+.nav-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+#restart-button {
+    position: relative;
+    top: 10px; 
+    left: 50%; 
+    transform: translateX(-50%); 
+    font-size: 16px;
+    color: white;
+    background-color: #007BFF; 
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  #restart-button:hover {
+    background-color: #0056b3; 
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
+  }
+

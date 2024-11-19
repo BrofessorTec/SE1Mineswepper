@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mineswepper Game</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  
+  <h1>Mineswepper</h1>
+  
+  <!-- div where the game and UI will be displayed -->
+  <div id="frame" class="frame">
+    <!-- div for UI at the top of the screen -->
+    <div class="top">
+
+  <!-- Add Restart Button in the UI -->
+  <div class="controls">
+   <button id="restart-button" onclick="restartGame()">Restart Game</button>
+  </div>
+
+    </div>
+    <!-- div where the game itself will be placed in the center of the board-->
+    <div class="game-board" id="game-board">
+
+    </div>
+    <!-- div for more UI at the bottom of the frame-->
+    <div class="bottom">
+
+    </div>
+  </div>
+
+  <!-- Temporary button to get to ruleset page until it goes into the navbar -->
+  <div class="temporary-button-container">
+    <button class="nav-button" onclick="window.location.href='rules.html'">
+      Temporary Ruleset Button
+    </button>
+  </div>
+  
+  <p class="group-name">
+    Christian Rock, Scotty Snyder, Tyler Campbell, Gavin Frisby, Zach Farmer, Chris Powers, and Nathan Mink
+  </p>
+  
+  <script src="Mineswepper.js"></script>
+</body>
+</html>
+
