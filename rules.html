@@ -1,0 +1,43 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mineswepper Rules</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ruleset div - this will probably be moved to a navbar with that is implemented-->
+  <div class="rules-container">
+    <h4>Mineswepper Ruleset</h4>
+    <p><span class="highlight">Objective:</span> Uncover all cells that do not contain mines. If you reveal a cell with a mine, you lose the game.</p>
+    <p><span class="highlight">Board Setup:</span></p>
+    <ul>
+        <li>The board consists of a grid of cells, with a certain number of hidden mines randomly placed.</li>
+        <li>The number of mines is predetermined based on the difficulty level.</li>
+    </ul>
+    <p><span class="highlight">Revealing Cells:</span></p>
+    <ul>
+        <li>Click on a cell to reveal what is underneath.</li>
+        <li>If the cell contains a mine, the game is over (you lose).</li>
+        <li>If the cell does not contain a mine, a number appears indicating how many adjacent cells contain mines.</li>
+        <li>If the revealed cell has no adjacent mines (number 0), all adjacent cells are automatically revealed.</li>
+    </ul>
+    <p><span class="highlight">Marking Mines:</span></p>
+    <ul>
+        <li>You can mark a cell as a suspected mine by placing a flag on it.</li>
+        <li>Flags help keep track of potential mines, but you do not need to mark all mines to win.</li>
+    </ul>
+    <p><span class="highlight">Winning:</span> The game is won when all cells that do not contain mines are revealed. Marking all mines correctly with flags is not a requirement for winning, but it can help keep track of dangerous spots.</p>
+    <div class="tip">💡 <strong>Gameplay Tip:</strong> Use the numbers on revealed cells to deduce where mines may be and proceed with caution!</div>
+  </div>
+  <!-- End ruleset div-->
+
+    <!-- Temporary button to get back to game until it goes into the navbar -->
+    <div class="temporary-button-container">
+      <button class="nav-button" onclick="window.location.href='index.html'">
+        Temporary Homepage Button
+      </button>
+    </div>
+</body>
+</html>
