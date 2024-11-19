@@ -59,6 +59,7 @@ function initializeGame()
           if (bombSpots.includes(currentLocation)) //new bomb placement logic
           {
             cell.textContent = "💣"
+            cell.classList.add('bomb'); // Apply the 'bomb' class for red background
           }
           else
           {
@@ -69,6 +70,7 @@ function initializeGame()
           cell.style.textAlign = 'center'; // Center the text
           cell.style.fontSize = '24px'; // Adjust font size
           cell.style.lineHeight = '39px'; // Match the cell height
+          cell.classList.add('revealed'); // Changes the tile color when it is clicked on by adding the css class 'revealed'
           cell.revealed = true;
         }
       });
