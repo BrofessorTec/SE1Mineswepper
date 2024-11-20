@@ -20,7 +20,7 @@ function initializeGame()
   bombSpots = generateMines(difficulty, gridRows, gridCols);
 
   //testing new cell array code here
-  create2DArray(gridRows, gridCols).forEach((row) => {
+  create2DArray(gridRows, gridCols, bombSpots).forEach((row) => {
     row.forEach((tile) => {
         //const cell = document.createElement('div');
         //cell.classList.add('cell');  // Adds cell css
