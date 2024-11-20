@@ -16,23 +16,23 @@ class Tile {
     // method to mark as revealed
     reveal() 
     {
-      //if not flagged
+      //if not flagged (when this is implemented)
       this.revealed = true;
       this.domElement.classList.add('revealed'); // Changes the tile color when it is clicked on by adding the css class 'revealed'
       if (this.mine)
       {
         this.domElement.classList.add('bomb'); // Apply the 'bomb' class for red background
         this.domElement.textContent = '💣'; // Show a bomb if it's a mine
-        //game over
+        //game over logic when implemented
       }
       else if (this.adjacentMines == 0)
       {
-        this.domElement.textContent = this.adjacentMines;
-        // reveal other empty spaces
+        this.domElement.textContent = this.adjacentMines; // we could also choose not to display 0s
+        // reveal other empty spaces logic when implemented
       }
       else
       {
-        this.domElement.textContent = this.adjacentMines;
+        this.domElement.textContent = this.adjacentMines; //displays the # of neighboring mines when implemented
       }
     }
     //method to mark as flagged
@@ -53,8 +53,12 @@ function create2DArray(rows, cols, bombSpots)
       console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
       for (let j = 0; j < cols; j++) {
         arr[i][j] = new Tile(); // assign a new Tile object to each column index
+        if (bombSpots.includes((i+1)+(j*10)))
+        {
+          arr[i][j].setMine(); // Sets Mines at the spots generated in Mineswepper.js
+        }
         arr[i][j].domElement.addEventListener('click', function () {
-          arr[i][j].reveal();
+          arr[i][j].reveal(); //reveals the Tile if clicked
       });
         console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
       }
