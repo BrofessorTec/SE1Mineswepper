@@ -158,3 +158,8 @@ h1 {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
   }
 
+  .cell.flagged {
+    background-color: #f1c40f; /* yellow background to indicate flagged tile */
+    color: black; /* change text color */
+  }
+  

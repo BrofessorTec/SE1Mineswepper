@@ -38,20 +38,34 @@ class Tile {
     //method to mark as flagged
     toggleFlag() 
     {
+      if (this.revealed) return; // don't allow flagging if the tile is revealed
       this.flagged = !this.flagged;
-    } 
+      if (this.flagged) 
+      {
+        this.domElement.classList.add('flagged');
+        this.domElement.textContent = '🚩'; // show a flag emoji
+      } 
+      else 
+      {
+        this.domElement.classList.remove('flagged');
+        this.domElement.textContent = ''; // remove the flag emoji
+      }
+    }
+
   } 
   
 
-  // may or may not be used - several other ways to do tile arrays.
+// function to create 2D array of Tile objects and plant bombs. Also Responds to flags (right click)
 function create2DArray(rows, cols, bombSpots) 
 {
     const arr = new Array(rows); // creates an array of rows
     console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // log dimensions
-    for (let i = 0; i < rows; i++) {
+    for (let i = 0; i < rows; i++) 
+    {
       arr[i] = new Array(cols); // create each row array with the number of columns
-      //console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
-      for (let j = 0; j < cols; j++) {
+      console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
+      for (let j = 0; j < cols; j++) 
+      {
         arr[i][j] = new Tile(); // assign a new Tile object to each column index
         if (bombSpots.includes((i+1)+(j*10)))
         {
@@ -60,7 +74,14 @@ function create2DArray(rows, cols, bombSpots)
         arr[i][j].domElement.addEventListener('click', function () {
           arr[i][j].reveal(); //reveals the Tile if clicked
       });
-        //console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
+
+       // Right-click event to flag the tile
+       arr[i][j].domElement.addEventListener('contextmenu', function (e) {
+        e.preventDefault(); // prevent the default context menu
+        arr[i][j].toggleFlag(); // toggle the flag
+      });
+
+       // console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
       }
     }
     return arr;
