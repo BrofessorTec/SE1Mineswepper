@@ -50,7 +50,7 @@ function create2DArray(rows, cols, bombSpots)
     console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // log dimensions
     for (let i = 0; i < rows; i++) {
       arr[i] = new Array(cols); // create each row array with the number of columns
-      console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
+      //console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
       for (let j = 0; j < cols; j++) {
         arr[i][j] = new Tile(); // assign a new Tile object to each column index
         if (bombSpots.includes((i+1)+(j*10)))
@@ -60,7 +60,7 @@ function create2DArray(rows, cols, bombSpots)
         arr[i][j].domElement.addEventListener('click', function () {
           arr[i][j].reveal(); //reveals the Tile if clicked
       });
-        console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
+        //console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
       }
     }
     return arr;
