@@ -15,30 +15,23 @@ function initializeGame()
   gameBoard.style.gridTemplateRows = `repeat(${gridRows}, 39px)`;
 
   difficulty = 1; // 1 is normal, could do 2 is higher etc.. just testing something here
-  bombsCount = 10; // 10 default number of bombs for normal difficulty
   let bombSpots = []; //create array of bomb locations
 
-  if (difficulty == 1) 
-    {
-      //generate 10 bomb locations, can be updated later with different difficulties
-      bombsCount = 10;
-      for (let bombPlanted = 0; bombPlanted < bombsCount; bombPlanted++)
-        {
-          gridMax = gridCols * gridRows;
-          bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
-          while (bombSpots.includes(bombLocation))
-          {
-            //generate another location if there is already a bomb in this spot
-            bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
-          }
-          bombSpots.push(bombLocation);
-          console.log("Bomb placed at " + bombLocation);
-        } 
-    }
+  bombSpots = generateMines(difficulty, gridRows, gridCols);
+
+  //testing new cell array code here
+  create2DArray(gridRows, gridCols).forEach((row) => {
+    row.forEach((tile) => {
+        //const cell = document.createElement('div');
+        //cell.classList.add('cell');  // Adds cell css
+        
+        gameBoard.appendChild(tile.domElement);
+    });
+  });
 
 
   // create the grid cells in the DOM using nested for loops 
-  for (let row = 0; row < gridRows; row++) 
+  /*for (let row = 0; row < gridRows; row++) 
   {
     for (let col = 0; col < gridCols; col++) 
     {
@@ -81,14 +74,36 @@ function initializeGame()
     }
     
   }
+ */
 
 }
-
 // Function to restart the game
 function restartGame() {
   // Clear and reinitialize the game board
   console.log("Game restarted");
   initializeGame();
+}
+
+function generateMines(difficulty, gridRows, gridCols) {
+  let bombSpots = []; //create array of bomb locations
+  if (difficulty == 1) 
+    {
+      //generate 10 bomb locations, can be updated later with different difficulties
+      bombsCount = 10;
+      for (let bombPlanted = 0; bombPlanted < bombsCount; bombPlanted++)
+        {
+          gridMax = gridCols * gridRows;
+          bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
+          while (bombSpots.includes(bombLocation))
+          {
+            //generate another location if there is already a bomb in this spot
+            bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
+          }
+          bombSpots.push(bombLocation);
+          console.log("Bomb placed at " + bombLocation);
+        } 
+    }
+    return bombSpots;
 }
 
 // Add this restart functionality to the "Restart Game" button

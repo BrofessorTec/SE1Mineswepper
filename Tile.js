@@ -1,6 +1,8 @@
 
 class Tile {
     constructor() {
+      this.domElement = document.createElement('div');
+      this.domElement.classList.add('cell');
       this.mine = false;    // does the tile have a mine?
       this.revealed = false; // is the tile revealed?
       this.flagged = false;  // is the tile flagged?
@@ -34,6 +36,9 @@ function create2DArray(rows, cols)
       console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
       for (let j = 0; j < cols; j++) {
         arr[i][j] = new Tile(); // assign a new Tile object to each column index
+        arr[i][j].domElement.addEventListener('click', function () {
+          this.textContent = '!'; // Update the text content to '!'
+      });
         console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
       }
     }
