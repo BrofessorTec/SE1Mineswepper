@@ -17,6 +17,7 @@ class Tile {
     reveal() 
     {
       //if not flagged (when this is implemented)
+      if (this.flagged) return;
       this.revealed = true;
       this.domElement.classList.add('revealed'); // Changes the tile color when it is clicked on by adding the css class 'revealed'
       if (this.mine)
@@ -80,6 +81,22 @@ function create2DArray(rows, cols, bombSpots)
         e.preventDefault(); // prevent the default context menu
         arr[i][j].toggleFlag(); // toggle the flag
       });
+
+          // Touch events for mobile (press and hold to flag)
+          let touchStartTimer;
+          arr[i][j].domElement.addEventListener('touchstart', function (e) {
+            touchStartTimer = setTimeout(() => {
+              arr[i][j].toggleFlag(); // Flag after a long press
+            }, 500); // 500ms for long press
+          });
+    
+          arr[i][j].domElement.addEventListener('touchend', function () {
+            clearTimeout(touchStartTimer); // Clear the timer on touch end
+          });
+    
+          arr[i][j].domElement.addEventListener('touchcancel', function () {
+            clearTimeout(touchStartTimer); // Clear the timer if the touch is cancelled
+          });
 
        // console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
       }
