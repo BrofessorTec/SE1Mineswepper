@@ -27,12 +27,12 @@ class Tile {
       }
       else if (this.adjacentMines == 0)
       {
-        this.domElement.textContent = this.adjacentMines; // we could also choose not to display 0s
+        this.domElement.textContent = '0'; // we could also choose not to display 0s
         // reveal other empty spaces logic when implemented
       }
       else
       {
-        this.domElement.textContent = this.adjacentMines; //displays the # of neighboring mines when implemented
+        this.domElement.textContent = this.adjacentMines.toString(); //displays the # of neighboring mines when implemented
       }
     }
     //method to mark as flagged
@@ -66,3 +66,4 @@ function create2DArray(rows, cols, bombSpots)
     return arr;
 }
 
+module.exports = { Tile, create2DArray }; // Export Tile and create2DArray
