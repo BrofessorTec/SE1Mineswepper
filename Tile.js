@@ -84,16 +84,26 @@ function create2DArray(rows, cols, bombSpots)
 
           // Touch events for mobile (press and hold to flag)
           let touchStartTimer;
+          let delayTime; // Delay for preventing immediate reveal after unflagging
+          
           arr[i][j].domElement.addEventListener('touchstart', function (e) {
+            // Start the long press timer for flagging
             touchStartTimer = setTimeout(() => {
               arr[i][j].toggleFlag(); // Flag after a long press
+              delayTime = Date.now();  // Record the time when flagging/unflagging happens
             }, 500); // 500ms for long press
           });
-    
+          
           arr[i][j].domElement.addEventListener('touchend', function () {
             clearTimeout(touchStartTimer); // Clear the timer on touch end
+          
+            // Adding a delay of 300ms to prevent immediate revealing after unflagging
+            const now = Date.now();
+            if (!arr[i][j].flagged && now - delayTime > 300) {
+              arr[i][j].reveal(); // Reveal only after the delay has passed
+            }
           });
-    
+          
           arr[i][j].domElement.addEventListener('touchcancel', function () {
             clearTimeout(touchStartTimer); // Clear the timer if the touch is cancelled
           });
