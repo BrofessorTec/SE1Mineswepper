@@ -62,6 +62,8 @@ document.getElementById("restart-button").addEventListener("click", restartGame)
 // call initializegame to create the grid
 initializeGame();
 
+// Export the functions for testing
+module.exports = { generateMines, initializeGame, restartGame };
 
 
 
