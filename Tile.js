@@ -66,4 +66,7 @@ function create2DArray(rows, cols, bombSpots)
     return arr;
 }
 
-module.exports = { Tile, create2DArray }; // Export Tile and create2DArray
+// Export Tile and create2DArray
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { Tile, create2DArray };
+}
