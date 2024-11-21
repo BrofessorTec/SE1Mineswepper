@@ -6,7 +6,7 @@ class Tile {
       this.mine = false;    // does the tile have a mine?
       this.revealed = false; // is the tile revealed?
       this.flagged = false;  // is the tile flagged?
-      this.adjacentMines = 0; // number of mines adjacent to the tile 
+      this.adjacentMines = 0; // number of mines adjacent to the tile
     }
     // method to set mine
     setMine() 
@@ -33,7 +33,6 @@ class Tile {
       else
       {
         //check neighboring cells based on current location
-        //make sure that there are not checks outside of the grid
         this.domElement.textContent = this.adjacentMines.toString(); //displays the # of neighboring mines when implemented
       }
     }
@@ -65,6 +64,7 @@ function create2DArray(rows, cols, bombSpots)
           arr[i][j].setMine(); // Sets Mines at the spots generated in Mineswepper.js
         }
         arr[i][j].domElement.addEventListener('click', function () {
+          //checks neighboring mines each time a tile is interacted with
           checkNeighborMines(arr, i, j);
           arr[i][j].reveal(); //reveals the Tile if clicked
       });
