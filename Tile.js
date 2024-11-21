@@ -32,6 +32,7 @@ class Tile {
       }
       else
       {
+        //check neighboring cells based on current location
         this.domElement.textContent = this.adjacentMines.toString(); //displays the # of neighboring mines when implemented
       }
     }
@@ -40,6 +41,11 @@ class Tile {
     {
       this.flagged = !this.flagged;
     } 
+    //method to adjust field for the correct number of adjacent mines
+    setAdjacentMines(neighboringMines)
+    {
+      this.adjacentMines = neighboringMines;
+    }
   } 
   
 
@@ -58,6 +64,8 @@ function create2DArray(rows, cols, bombSpots)
           arr[i][j].setMine(); // Sets Mines at the spots generated in Mineswepper.js
         }
         arr[i][j].domElement.addEventListener('click', function () {
+          //checks neighboring mines each time a tile is interacted with
+          checkNeighborMines(arr, i, j);
           arr[i][j].reveal(); //reveals the Tile if clicked
       });
         //console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
@@ -65,6 +73,47 @@ function create2DArray(rows, cols, bombSpots)
     }
     return arr;
 }
+
+function checkNeighborMines(arr, xPos, yPos)
+{
+  console.log("Currently checking location: " + xPos + ", " + yPos);
+  if (!arr[xPos][yPos].mine) //if not a mine
+  {
+      if (xPos-1 >= 0 && arr[xPos-1][yPos].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+        if (xPos-1 >= 0 && yPos-1 >= 0 && arr[xPos-1][yPos-1].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+        if (xPos-1 >= 0 && yPos+1 <= 9 && arr[xPos-1][yPos+1].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+        if (yPos+1 <= 9 && arr[xPos][yPos+1].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+        if (xPos+1 <= 9 && yPos+1 <= 9 && arr[xPos+1][yPos+1].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+        if (xPos+1 <= 9 && arr[xPos+1][yPos].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+        if (xPos+1 <= 9 && yPos-1 >= 0 && arr[xPos+1][yPos-1].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+        if (yPos-1 >= 0 && arr[xPos][yPos-1].mine)
+        {
+          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+        }
+  }
+}
+
 
 // Export Tile and create2DArray
 if (typeof module !== 'undefined' && module.exports) {
