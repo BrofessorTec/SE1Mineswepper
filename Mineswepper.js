@@ -63,8 +63,11 @@ document.getElementById("restart-button").addEventListener("click", restartGame)
 initializeGame();
 
 // Export the functions for testing
-module.exports = { generateMines, initializeGame, restartGame };
-
+// module.exports = { generateMines, initializeGame, restartGame };
+// Export for tests but ignore `module` in dev tools where it dependent on Node
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { generateMines, initializeGame, restartGame };
+}
 
 
 
