@@ -1,71 +1,107 @@
-// select elements
+// Select elements
 const gameBoard = document.getElementById('game-board');
 
-// game settings
+// Game settings
 const gridRows = 10; // 10x10 grid
 const gridCols = 10;
+let difficulty = 1; 
 
-// function to initialize the game grid (just printing the grid)
-function initializeGame() 
-{
-  gameBoard.innerHTML = '';  // clear the game board
+let firstClick = true; // Track if it's the first click
+let bombSpots = []; // Global bomb locations
 
-  // set the grid template for the CSS grid layout - can be altered later if needed for dynamic game board size
-  gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`; 
-  gameBoard.style.gridTemplateRows = `repeat(${gridRows}, 39px)`;
+// Function to initialize the game grid
+function initializeGame() {
+    gameBoard.innerHTML = ''; // Clear the game board
 
-  difficulty = 1; // 1 is normal and equals 10% bombs as of now. 2 is 20% etc. This is used in generateMines()
+    // Set the grid template for the CSS grid layout
+    gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`;
+    gameBoard.style.gridTemplateRows = `repeat(${gridRows}, 39px)`;
 
-  //Generates Mines in unique locations based on difficulty
-  //This is used when generating Tiles to know if they have a Mine or not
-  //Will need to alter some logic later for the First Click interaction..
-  let bombSpots = []; //create an empty array of bomb locations
-  bombSpots = generateMines(difficulty, gridRows, gridCols); 
+    // Initialize the game grid without mines
+    const tileArray = createEmptyGrid(gridRows, gridCols);
 
-  //generates Tiles and populates Game Board
-  create2DArray(gridRows, gridCols, bombSpots).forEach((row) => {
-    row.forEach((tile) => {
-        gameBoard.appendChild(tile.domElement);
+    tileArray.forEach((row, rowIndex) => {
+        row.forEach((tile, colIndex) => {
+            gameBoard.appendChild(tile.domElement);
+
+            tile.domElement.addEventListener('click', () => {
+              if (firstClick) {
+                  // Generate mines avoiding the first clicked tile
+                  bombSpots = generateMinesAfterFirstClick(rowIndex, colIndex, gridRows, gridCols);
+                  populateMines(tileArray, bombSpots);
+                  firstClick = false;
+          
+                  // Reveal the clicked tile after bombs are placed
+                  checkNeighborMines(tileArray, rowIndex, colIndex);
+              } else {
+                  // Process the click after bombs are placed
+                  checkNeighborMines(tileArray, rowIndex, colIndex);
+              }
+          });
+        });
     });
-  });
-
-}
-// Function to restart the game
-function restartGame() {
-  // Clear and reinitialize the game board
-  console.log("Game restarted");
-  initializeGame();
 }
 
-function generateMines(difficulty, gridRows, gridCols) {
-  let bombSpots = []; //create array of bomb locations
-      //generate 10 x difficulty bomb locations
-      bombsCount = 10 * difficulty;
-      for (let bombPlanted = 0; bombPlanted < bombsCount; bombPlanted++)
-        {
-          gridMax = gridCols * gridRows;
-          bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
-          while (bombSpots.includes(bombLocation))
-          {
-            //generate another location if there is already a bomb in this spot
-            bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
-          }
-          bombSpots.push(bombLocation);
-          console.log("Bomb placed at " + bombLocation);
-        } 
+// Create an empty grid with no mines
+function createEmptyGrid(rows, cols) {
+    return create2DArray(rows, cols, []); // Utilize the `create2DArray` function from Tile.js
+}
+
+// Generate mines, avoiding the first clicked tile and its neighbors
+function generateMinesAfterFirstClick(row, col, rows, cols) {
+    const excludedTiles = getExcludedTiles(row, col, rows, cols);
+    const bombSpots = [];
+    const totalCells = rows * cols;
+    const bombCount = 10; // Adjust for difficulty if needed
+
+    while (bombSpots.length < bombCount) {
+        const bombLocation = Math.floor(Math.random() * totalCells);
+        if (!excludedTiles.includes(bombLocation) && !bombSpots.includes(bombLocation)) {
+            bombSpots.push(bombLocation);
+        }
+    }
+
     return bombSpots;
 }
 
-// Add this restart functionality to the "Restart Game" button
-document.getElementById("restart-button").addEventListener("click", restartGame);
-
-// call initializegame to create the grid
-initializeGame();
-
-// Export for tests but ignore `module` in dev tools where it dependent on Node
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { generateMines, initializeGame, restartGame };
+// Get tiles to exclude from bomb placement (clicked tile and neighbors)
+function getExcludedTiles(row, col, rows, cols) {
+    const excluded = [];
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            const newRow = row + i;
+            const newCol = col + j;
+            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+                excluded.push(newRow * cols + newCol);
+            }
+        }
+    }
+    return excluded;
 }
 
+// Populate the grid with mines based on bombSpots
+function populateMines(tileArray, bombSpots) {
+    bombSpots.forEach((bombIndex) => {
+        const row = Math.floor(bombIndex / gridCols);
+        const col = bombIndex % gridCols;
+        tileArray[row][col].setMine();
+    });
+}
 
+// Restart game functionality
+function restartGame() {
+    console.log("Game restarted");
+    firstClick = true; // Reset first click flag
+    initializeGame();
+}
 
+// Add restart button functionality
+document.getElementById("restart-button").addEventListener("click", restartGame);
+
+// Initialize the game grid on page load
+initializeGame();
+
+// Export for tests but ignore `module` in dev tools where it's dependent on Node
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { generateMinesAfterFirstClick, initializeGame, restartGame };
+}

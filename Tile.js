@@ -27,7 +27,7 @@ class Tile {
       }
       else if (this.adjacentMines == 0)
       {
-        this.domElement.textContent = '0'; // we could also choose not to display 0s
+        this.domElement.textContent = ''; // we could also choose not to display 0s
         // reveal other empty spaces logic when implemented
       }
       else
@@ -50,67 +50,58 @@ class Tile {
   
 
   // may or may not be used - several other ways to do tile arrays.
-function create2DArray(rows, cols, bombSpots) 
-{
+  function create2DArray(rows, cols, bombSpots) {
     const arr = new Array(rows); // creates an array of rows
     console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // log dimensions
+  
     for (let i = 0; i < rows; i++) {
       arr[i] = new Array(cols); // create each row array with the number of columns
-      //console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
+  
       for (let j = 0; j < cols; j++) {
         arr[i][j] = new Tile(); // assign a new Tile object to each column index
-        if (bombSpots.includes((i+1)+(j*10)))
-        {
-          arr[i][j].setMine(); // Sets Mines at the spots generated in Mineswepper.js
-        }
+  
+        // Reset the DOM element to ensure no duplicate listeners
+        arr[i][j].domElement.replaceWith(arr[i][j].domElement.cloneNode(true)); // Remove old listeners
+        arr[i][j].domElement = arr[i][j].domElement.cloneNode(true); // Replace with clone
+  
+        // Add the event listener
         arr[i][j].domElement.addEventListener('click', function () {
-          //checks neighboring mines each time a tile is interacted with
-          checkNeighborMines(arr, i, j);
-          arr[i][j].reveal(); //reveals the Tile if clicked
-      });
-        //console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
+          checkNeighborMines(arr, i, j); // Check neighboring mines
+          arr[i][j].reveal(); // Reveal the tile
+        });
       }
     }
     return arr;
-}
+  }
 
-function checkNeighborMines(arr, xPos, yPos)
-{
-  console.log("Currently checking location: " + xPos + ", " + yPos);
-  if (!arr[xPos][yPos].mine) //if not a mine
-  {
-      if (xPos-1 >= 0 && arr[xPos-1][yPos].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
+  function checkNeighborMines(arr, xPos, yPos) {
+    if (arr[xPos][yPos].checked) return; // Skip already-checked tiles
+  
+    console.log("Currently checking location: " + xPos + ", " + yPos);
+  
+    arr[xPos][yPos].checked = true; // Mark the tile as checked
+
+  if (!arr[xPos][yPos].mine && arr[xPos][yPos].adjacentMines === 0) { // Only calculate if not a mine and not calculated yet
+    let mineCount = 0;
+
+    // Directions: top-left, top, top-right, right, bottom-right, bottom, bottom-left, left
+    const directions = [
+      [-1, 0], [-1, -1], [-1, 1], [0, 1],
+      [1, 1], [1, 0], [1, -1], [0, -1],
+    ];
+
+    for (const [dx, dy] of directions) {
+      const newX = xPos + dx;
+      const newY = yPos + dy;
+
+      if (newX >= 0 && newX < arr.length && newY >= 0 && newY < arr[0].length) {
+        if (arr[newX][newY].mine) {
+          mineCount++;
         }
-        if (xPos-1 >= 0 && yPos-1 >= 0 && arr[xPos-1][yPos-1].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
-        }
-        if (xPos-1 >= 0 && yPos+1 <= 9 && arr[xPos-1][yPos+1].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
-        }
-        if (yPos+1 <= 9 && arr[xPos][yPos+1].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
-        }
-        if (xPos+1 <= 9 && yPos+1 <= 9 && arr[xPos+1][yPos+1].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
-        }
-        if (xPos+1 <= 9 && arr[xPos+1][yPos].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
-        }
-        if (xPos+1 <= 9 && yPos-1 >= 0 && arr[xPos+1][yPos-1].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
-        }
-        if (yPos-1 >= 0 && arr[xPos][yPos-1].mine)
-        {
-          arr[xPos][yPos].setAdjacentMines(arr[xPos][yPos].adjacentMines + 1);
-        }
+      }
+    }
+
+    arr[xPos][yPos].setAdjacentMines(mineCount); // Set adjacent mines count
   }
 }
 
