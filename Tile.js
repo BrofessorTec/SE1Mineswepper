@@ -7,16 +7,19 @@ class Tile {
     this.revealed = false; // is the tile revealed?
     this.flagged = false;  // is the tile flagged?
     this.adjacentMines = 0; // number of mines adjacent to the tile
+    this.lastFlaggedTime = 0; // Tracks when the tile was last flagged or unflagged
   }
+  
   // method to set mine
   setMine() {
     this.mine = true;
   }
+  
   // method to mark as revealed
   reveal() {
 
     if (this.revealed || gameOver) return;
-
+ 
     //if not flagged (when this is implemented)
     this.revealed = true;
     this.domElement.classList.add('revealed'); // Changes the tile color when it is clicked on by adding the css class 'revealed'
@@ -36,12 +39,21 @@ class Tile {
   }
   //method to mark as flagged
   toggleFlag() {
+    if (this.revealed) return; // Don't allow flagging a revealed tile
     this.flagged = !this.flagged;
+    this.lastFlaggedTime = Date.now(); // Record the time when the tile was flagged/unflagged
+
+    if (this.flagged) {
+      this.domElement.classList.add('flagged');
+      this.domElement.textContent = '🚩'; // Show a flag emoji
+    } else {
+      this.domElement.classList.remove('flagged');
+      this.domElement.textContent = ''; // Remove the flag emoji
+    }
   }
 }
 
-
-// may or may not be used - several other ways to do tile arrays.
+// Function to create 2D array of tiles and plant bombs
 function create2DArray(rows, cols, bombSpots) {
   const arr = new Array(rows); // creates an array of rows
   console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // log dimensions
@@ -54,6 +66,8 @@ function create2DArray(rows, cols, bombSpots) {
         arr[i][j].setMine(); // Sets Mines at the spots generated in Mineswepper.js
       }
       arr[i][j].domElement.__tileObj = arr[i][j]; // Link the DOM element to the Tile object
+
+      // Left-click event to reveal the tile
       arr[i][j].domElement.addEventListener('click', function () {
         if (!gameOver) {
           arr[i][j].reveal();
@@ -63,7 +77,35 @@ function create2DArray(rows, cols, bombSpots) {
           }
         }
       });
-      //console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
+  //console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
+
+      // Right-click event to flag the tile
+      arr[i][j].domElement.addEventListener('contextmenu', function (e) {
+        e.preventDefault(); // Prevent the default context menu
+        arr[i][j].toggleFlag(); // Toggle the flag
+      });
+
+      // Touch events for mobile (press and hold to flag)
+      let touchStartTimer;
+      arr[i][j].domElement.addEventListener('touchstart', function (e) {
+        touchStartTimer = setTimeout(() => {
+          arr[i][j].toggleFlag(); // Flag after a long press
+        }, 500); // 500ms for long press
+      });
+
+      arr[i][j].domElement.addEventListener('touchend', function () {
+        clearTimeout(touchStartTimer); // Clear the timer on touch end
+        const elapsedSinceUnflag = Date.now() - arr[i][j].lastFlaggedTime;
+
+        // Prevent revealing the tile if it was unflagged within 300ms
+        if (!arr[i][j].flagged && elapsedSinceUnflag >= 300) {
+          arr[i][j].reveal();
+        }
+      });
+
+      arr[i][j].domElement.addEventListener('touchcancel', function () {
+        clearTimeout(touchStartTimer); // Clear the timer if the touch is cancelled
+      });
     }
   }
   return arr;
