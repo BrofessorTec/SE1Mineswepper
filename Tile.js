@@ -1,4 +1,3 @@
-
 class Tile {
   constructor() {
     this.domElement = document.createElement('div');
@@ -7,7 +6,7 @@ class Tile {
     this.revealed = false; // is the tile revealed?
     this.flagged = false;  // is the tile flagged?
     this.adjacentMines = 0; // number of mines adjacent to the tile
-    this.lastFlaggedTime = 0; // Tracks when the tile was last flagged or unflagged
+    this.wasLongPress = false; // to track if the touch was a long press for flagging
   }
   
   // method to set mine
@@ -17,10 +16,8 @@ class Tile {
   
   // method to mark as revealed
   reveal() {
+    if (this.revealed || gameOver || this.flagged) return;
 
-    if (this.revealed || gameOver) return;
- 
-    //if not flagged (when this is implemented)
     this.revealed = true;
     this.domElement.classList.add('revealed'); // Changes the tile color when it is clicked on by adding the css class 'revealed'
     if (this.mine) {
@@ -28,20 +25,18 @@ class Tile {
       this.domElement.textContent = '💣'; // Show a bomb if it's a mine
       hitMine(); //If a mine gets revealed, call the hitMine() function
       //game over logic when implemented
-    }
-    else if (this.adjacentMines == 0) {
+    } else if (this.adjacentMines == 0) {
       this.domElement.textContent = '0'; // we could also choose not to display 0s
       // reveal other empty spaces logic when implemented
-    }
-    else {
+    } else {
       this.domElement.textContent = this.adjacentMines.toString(); //displays the # of neighboring mines when implemented
     }
   }
-  //method to mark as flagged
+
+  // method to mark as flagged
   toggleFlag() {
     if (this.revealed) return; // Don't allow flagging a revealed tile
     this.flagged = !this.flagged;
-    this.lastFlaggedTime = Date.now(); // Record the time when the tile was flagged/unflagged
 
     if (this.flagged) {
       this.domElement.classList.add('flagged');
@@ -59,7 +54,6 @@ function create2DArray(rows, cols, bombSpots) {
   console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // log dimensions
   for (let i = 0; i < rows; i++) {
     arr[i] = new Array(cols); // create each row array with the number of columns
-    //console.log(`Creating row ${i} with ${cols} columns.`); //logging statement
     for (let j = 0; j < cols; j++) {
       arr[i][j] = new Tile(); // assign a new Tile object to each column index
       if (bombSpots.includes((i + 1) + (j * 10))) {
@@ -71,13 +65,12 @@ function create2DArray(rows, cols, bombSpots) {
       arr[i][j].domElement.addEventListener('click', function () {
         if (!gameOver) {
           arr[i][j].reveal();
-          //if the tile revealed is a mine, run the hitMine() function, reveal all tiles and end game
+          // if the tile revealed is a mine, run the hitMine() function
           if (arr[i][j].mine) {
             hitMine();
           }
         }
       });
-  //console.log(`Row = ${i}, Col = ${j}: Tile object created.`);  //logging statement
 
       // Right-click event to flag the tile
       arr[i][j].domElement.addEventListener('contextmenu', function (e) {
@@ -87,18 +80,18 @@ function create2DArray(rows, cols, bombSpots) {
 
       // Touch events for mobile (press and hold to flag)
       let touchStartTimer;
-      arr[i][j].domElement.addEventListener('touchstart', function (e) {
+      arr[i][j].domElement.addEventListener('touchstart', function () {
+        arr[i][j].wasLongPress = false; // Reset long press tracker
         touchStartTimer = setTimeout(() => {
           arr[i][j].toggleFlag(); // Flag after a long press
+          arr[i][j].wasLongPress = true; // Set long press tracker
         }, 500); // 500ms for long press
       });
 
       arr[i][j].domElement.addEventListener('touchend', function () {
         clearTimeout(touchStartTimer); // Clear the timer on touch end
-        const elapsedSinceUnflag = Date.now() - arr[i][j].lastFlaggedTime;
-
-        // Prevent revealing the tile if it was unflagged within 300ms
-        if (!arr[i][j].flagged && elapsedSinceUnflag >= 300) {
+        // Only reveal if the touch was not a long press for flagging
+        if (!arr[i][j].flagged && !arr[i][j].wasLongPress) {
           arr[i][j].reveal();
         }
       });
