@@ -158,20 +158,3 @@ h1 {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
   }
 
-  .cell.flagged {
-    background-color: #f1c40f; /* yellow background to indicate flagged tile */
-    color: black; /* change text color */
-  }
-
-  
-  /* prevent text selection on all devices hopefully (works on iphone) */
-* {
-    user-select: none;             /* standard for modern browsers */
-    -webkit-user-select: none;     /* safari and other WebKit-based browsers */
-    -ms-user-select: none;         /* Edge or others */
-  }
-  
-  /* prevent long-press callout menu on links, inputs, and other elements */
-  a, input, textarea {
-    -webkit-touch-callout: none;   /* disable the long-press callout menu on iOS */
-  }
