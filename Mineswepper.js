@@ -5,6 +5,9 @@ const gameBoard = document.getElementById('game-board');
 const gridRows = 10; // 10x10 grid
 const gridCols = 10;
 
+//flag for if the player reveals a bomb
+let gameOver = false;
+
 // function to initialize the game grid (just printing the grid)
 function initializeGame() 
 {
@@ -34,6 +37,7 @@ function initializeGame()
 function restartGame() {
   // Clear and reinitialize the game board
   console.log("Game restarted");
+  gameOver = false;
   initializeGame();
 }
 
@@ -54,6 +58,23 @@ function generateMines(difficulty, gridRows, gridCols) {
           console.log("Bomb placed at " + bombLocation);
         } 
     return bombSpots;
+}
+
+// function to end the game when revealing a mine tile
+function hitMine() {
+  gameOver = true;
+  console.log("Game Over triggered!");
+
+  // Reveal all bombs
+  const tiles = document.querySelectorAll('.cell');
+  tiles.forEach((tile) => {
+    const tileObj = tile.__tileObj; // Retrieve the tile
+    if (tileObj && tileObj.mine) {
+      tile.textContent = '💣'; // Show the bomb icon
+      tile.classList.add('bomb', 'revealed'); // Apply the bomb and revealed styles
+    }
+    tile.style.pointerEvents = 'none'; // Disable further clicks on all tiles
+  });
 }
 
 // Add this restart functionality to the "Restart Game" button
