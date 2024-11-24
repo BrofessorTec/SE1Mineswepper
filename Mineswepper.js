@@ -6,9 +6,11 @@ const gridRows = 10; // 10x10 grid
 const gridCols = 10;
 let difficulty = 1; 
 
+
 let firstClick = true; // Track if it's the first click
 let bombSpots = []; // Global bomb locations
 let gameOver = false; // Track if the game is over
+
 
 // Function to initialize the game grid
 function initializeGame() {
@@ -67,6 +69,7 @@ function generateMinesAfterFirstClick(row, col, rows, cols) {
     return bombSpots;
 }
 
+
 // Get tiles to exclude from bomb placement (clicked tile and neighbors)
 function getExcludedTiles(row, col, rows, cols) {
     const excluded = [];
@@ -81,6 +84,7 @@ function getExcludedTiles(row, col, rows, cols) {
     }
     return excluded;
 }
+
 
 // Populate the grid with mines based on bombSpots
 function populateMines(tileArray, bombSpots) {

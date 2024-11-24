@@ -36,8 +36,6 @@ class Tile {
     }
   }
 
-  
-
   // method to mark as flagged
   toggleFlag() {
     if (this.revealed) return; // Don't allow flagging a revealed tile
@@ -107,35 +105,6 @@ function create2DArray(rows, cols, bombSpots) {
     }
   }
   return arr;
-}
-
-function checkNeighborMines(tileArray) {
-  for (let row = 0; row < gridRows; row++) {
-    for (let col = 0; col < gridCols; col++) {
-        if (!tileArray[row][col].mine) {
-            let mineCount = 0;
-            const directions = [
-                [-1, -1], [-1, 0], [-1, 1],
-                [0, -1],          [0, 1],
-                [1, -1], [1, 0], [1, 1],
-            ];
-
-            directions.forEach(([dx, dy]) => {
-                const newRow = row + dx;
-                const newCol = col + dy;
-                if (
-                    newRow >= 0 && newRow < gridRows &&
-                    newCol >= 0 && newCol < gridCols &&
-                    tileArray[newRow][newCol].mine
-                ) {
-                    mineCount++;
-                }
-            });
-
-            tileArray[row][col].setAdjacentMines(mineCount);
-        }
-    }
-}
 }
 
 // Export Tile and create2DArray
