@@ -8,10 +8,13 @@ let difficulty = 1;
 
 let firstClick = true; // Track if it's the first click
 let bombSpots = []; // Global bomb locations
+let gameOver = false; // Track if the game is over
 
 // Function to initialize the game grid
 function initializeGame() {
     gameBoard.innerHTML = ''; // Clear the game board
+    firstClick = true; // Reset first-click flag
+    gameOver = false; // Reset game-over flag
 
     // Set the grid template for the CSS grid layout
     gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`;
@@ -25,19 +28,19 @@ function initializeGame() {
             gameBoard.appendChild(tile.domElement);
 
             tile.domElement.addEventListener('click', () => {
-              if (firstClick) {
-                  // Generate mines avoiding the first clicked tile
-                  bombSpots = generateMinesAfterFirstClick(rowIndex, colIndex, gridRows, gridCols);
-                  populateMines(tileArray, bombSpots);
-                  firstClick = false;
-          
-                  // Reveal the clicked tile after bombs are placed
-                  checkNeighborMines(tileArray, rowIndex, colIndex);
-              } else {
-                  // Process the click after bombs are placed
-                  checkNeighborMines(tileArray, rowIndex, colIndex);
-              }
-          });
+                if (gameOver) return;
+
+                if (firstClick) {
+                    // Generate mines avoiding the first clicked tile
+                    bombSpots = generateMinesAfterFirstClick(rowIndex, colIndex, gridRows, gridCols);
+                    populateMines(tileArray, bombSpots);
+                    checkNeighborMines(tileArray);
+                    firstClick = false;
+                }
+
+                // Reveal the clicked tile
+                tile.reveal(tileArray, rowIndex, colIndex);
+            });
         });
     });
 }
@@ -52,7 +55,7 @@ function generateMinesAfterFirstClick(row, col, rows, cols) {
     const excludedTiles = getExcludedTiles(row, col, rows, cols);
     const bombSpots = [];
     const totalCells = rows * cols;
-    const bombCount = 10; // Adjust for difficulty if needed
+    const bombCount = 10 * difficulty; // Adjust for difficulty if needed
 
     while (bombSpots.length < bombCount) {
         const bombLocation = Math.floor(Math.random() * totalCells);
@@ -88,10 +91,27 @@ function populateMines(tileArray, bombSpots) {
     });
 }
 
+
+// End the game when revealing a mine tile
+function hitMine() {
+    gameOver = true;
+    console.log("Game Over triggered!");
+
+    // Reveal all bombs
+    const tiles = document.querySelectorAll('.cell');
+    tiles.forEach((tile) => {
+        const tileObj = tile.__tileObj; // Retrieve the tile
+        if (tileObj && tileObj.mine) {
+            tile.textContent = '💣'; // Show the bomb icon
+            tile.classList.add('bomb', 'revealed'); // Apply the bomb and revealed styles
+        }
+        tile.style.pointerEvents = 'none'; // Disable further clicks on all tiles
+    });
+}
+
 // Restart game functionality
 function restartGame() {
     console.log("Game restarted");
-    firstClick = true; // Reset first click flag
     initializeGame();
 }
 
