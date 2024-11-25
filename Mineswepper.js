@@ -23,8 +23,8 @@ function updateTimer() {
     const seconds = timeElapsed % 60; // Calculate seconds
     document.getElementById('timer').textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
 
-    // Stops at 10 minutes (600 seconds)
-    if (timeElapsed >= 600) { 
+    // Stops at 9:59 (599 seconds)
+    if (timeElapsed >= 599) { 
         clearInterval(timeInterval);
     }
 }
