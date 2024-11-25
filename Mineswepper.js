@@ -5,18 +5,48 @@ const gameBoard = document.getElementById('game-board');
 const gridRows = 10; // 10x10 grid
 const gridCols = 10;
 let difficulty = 1; 
+let timeElapsed = 0; // Tracks elapsed time
+let timeInterval = null; // Reference for the timer interval
+let timerStarted = false; //Tracks if the timer has been started
 
 
 let firstClick = true; // Track if it's the first click
 let bombSpots = []; // Global bomb locations
 let gameOver = false; // Track if the game is over
 
+//Function to update the timer
+//Sets minutes and seconds and elapses time
+//Sets the string for timer and pads the seconds (so that seconds is always 2 digits)
+function updateTimer() {
+    timeElapsed++;
+    const minutes = Math.floor(timeElapsed / 60); // Calculate minutes
+    const seconds = timeElapsed % 60; // Calculate seconds
+    document.getElementById('timer').textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+    // Stops at 10 minutes (600 seconds)
+    if (timeElapsed >= 600) { 
+        clearInterval(timeInterval);
+    }
+}
+
+//Function to start the timer by setting the interval to 1000 (1 second)
+function startTimer() {
+    timeElapsed = 0;
+    if (!timerStarted) {
+        timerStarted = true;
+        timeInterval = setInterval(updateTimer, 1000); // Calls `updateTimer` every second
+    }
+    
+}
 
 // Function to initialize the game grid
 function initializeGame() {
     gameBoard.innerHTML = ''; // Clear the game board
     firstClick = true; // Reset first-click flag
     gameOver = false; // Reset game-over flag
+    if (timeInterval) clearInterval(timeInterval); // Clear any existing interval
+    document.getElementById('timer').textContent = 'Time: 0:00'; // Reset timer display
+    timerStarted = false; 
 
     // Set the grid template for the CSS grid layout
     gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`;
@@ -33,6 +63,7 @@ function initializeGame() {
                 if (gameOver) return;
 
                 if (firstClick) {
+                    startTimer(); //Starts timer on the first click
                     // Generate mines avoiding the first clicked tile
                     bombSpots = generateMinesAfterFirstClick(rowIndex, colIndex, gridRows, gridCols);
                     populateMines(tileArray, bombSpots);
@@ -99,6 +130,8 @@ function populateMines(tileArray, bombSpots) {
 // End the game when revealing a mine tile
 function hitMine() {
     gameOver = true;
+    timerStarted = false;
+    clearInterval(timeInterval); //Stops timer when bomb is hit
     console.log("Game Over triggered!");
 
     // Reveal all bombs

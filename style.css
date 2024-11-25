@@ -1,7 +1,7 @@
 /* style.css
     Author:         Scotty Snyder, Chris Powers, Nathan Mink (if you add to this file in the future just add your name here and update last revised)	      			
     Date:		    11/14/24
-    Last revised:   11/18/24
+    Last revised:   11/25/24
     Description:    Mineswepper stylesheet
 */
 
@@ -157,6 +157,14 @@ h1 {
     background-color: #0056b3; 
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
   }
+
+  #timer {
+    display: block; /* Ensure the timer is a block-level element */
+    text-align: center; /* Center the timer text */
+    font-size: 28px;
+    color: #333;
+    margin-top: 20px; /* Add space between the timer and other elements */
+}
 
   .cell.flagged {
     background-color: #f1c40f; /* yellow background to indicate flagged tile */
