@@ -13,23 +13,26 @@ class Tile {
   setMine() {
     this.mine = true;
   }
+
+  setAdjacentMines(count) {
+    this.adjacentMines = count;
+  }  
   
   // method to mark as revealed
   reveal() {
     if (this.revealed || gameOver || this.flagged) return;
-
+  
     this.revealed = true;
-    this.domElement.classList.add('revealed'); // Changes the tile color when it is clicked on by adding the css class 'revealed'
+    this.domElement.classList.add('revealed'); // Change color for revealed tiles
+  
     if (this.mine) {
-      this.domElement.classList.add('bomb'); // Apply the 'bomb' class for red background
-      this.domElement.textContent = '💣'; // Show a bomb if it's a mine
-      hitMine(); //If a mine gets revealed, call the hitMine() function
-      //game over logic when implemented
-    } else if (this.adjacentMines == 0) {
-      this.domElement.textContent = '0'; // we could also choose not to display 0s
-      // reveal other empty spaces logic when implemented
+      this.domElement.classList.add('bomb');
+      this.domElement.textContent = '💣';
+      hitMine(); // Trigger game-over logic
+    } else if (this.adjacentMines === 0) {
+      this.domElement.textContent = ''; // Blank tile for 0 adjacent mines
     } else {
-      this.domElement.textContent = this.adjacentMines.toString(); //displays the # of neighboring mines when implemented
+      this.domElement.textContent = this.adjacentMines.toString(); // Show number
     }
   }
 
@@ -103,6 +106,36 @@ function create2DArray(rows, cols, bombSpots) {
   }
   return arr;
 }
+
+function checkNeighborMines(tileArray) {
+  for (let row = 0; row < gridRows; row++) {
+    for (let col = 0; col < gridCols; col++) {
+        if (!tileArray[row][col].mine) {
+            let mineCount = 0;
+            const directions = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1],          [0, 1],
+                [1, -1], [1, 0], [1, 1],
+            ];
+
+            directions.forEach(([dx, dy]) => {
+                const newRow = row + dx;
+                const newCol = col + dy;
+                if (
+                    newRow >= 0 && newRow < gridRows &&
+                    newCol >= 0 && newCol < gridCols &&
+                    tileArray[newRow][newCol].mine
+                ) {
+                    mineCount++;
+                }
+            });
+
+            tileArray[row][col].setAdjacentMines(mineCount);
+        }
+    }
+  }
+}
+
 
 // Export Tile and create2DArray
 if (typeof module !== 'undefined' && module.exports) {
