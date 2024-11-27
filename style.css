@@ -1,7 +1,7 @@
 /* style.css
     Author:         Scotty Snyder, Chris Powers, Nathan Mink (if you add to this file in the future just add your name here and update last revised)	      			
     Date:		    11/14/24
-    Last revised:   11/18/24
+    Last revised:   11/25/24
     Description:    Mineswepper stylesheet
 */
 
@@ -158,3 +158,28 @@ h1 {
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); 
   }
 
+  #timer {
+    display: block; /* Ensure the timer is a block-level element */
+    text-align: center; /* Center the timer text */
+    font-size: 28px;
+    color: #333;
+    margin-top: 20px; /* Add space between the timer and other elements */
+}
+
+  .cell.flagged {
+    background-color: #f1c40f; /* yellow background to indicate flagged tile */
+    color: black; /* change text color */
+  }
+
+
+  /* prevent text selection on all devices hopefully (works on iphone) */
+* {
+    user-select: none;             /* standard for modern browsers */
+    -webkit-user-select: none;     /* safari and other WebKit-based browsers */
+    -ms-user-select: none;         /* Edge or others */
+  }
+
+  /* prevent long-press callout menu on links, inputs, and other elements */
+  a, input, textarea {
+    -webkit-touch-callout: none;   /* disable the long-press callout menu on iOS */
+  }
