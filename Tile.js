@@ -42,11 +42,34 @@ class Tile {
     } else if (this.adjacentMines === 0) {
         this.domElement.textContent = '';
         this.revealAdjacentEmpty(tileArray, row, col); // Recursive reveal
+        //check to see if game is won when revealing this tile
+        this.gameWinCheck();
     } else {
         this.domElement.textContent = this.adjacentMines.toString();
+        //check to see if game is won when revealing this tile
+        this.gameWinCheck();
     }
 }
 
+  // method to check if the game has been won
+  gameWinCheck() {
+    // assumes board is 10x10 and 10 mines (difficulty 1)
+    if (revealedTilesForWin == 89) // win condition - 1, because last click will cause the win
+    {
+        //game over logic here to stop game and timer
+        gameOver = true;
+        timerStarted = false;
+        // timer stop
+        clearInterval(timeInterval); 
+        //score = document.getElementById('timer').textContent; //will be sent with username for leaderboard
+        console.log("Game Over, you win! " + document.getElementById('timer').textContent);
+    }
+    else
+    {
+        revealedTilesForWin++;
+        console.log("Currently revealed tiles count: " + revealedTilesForWin);
+    }
+  }
 
   // method to mark as flagged
   toggleFlag() {
