@@ -25,24 +25,25 @@ class Tile {
     this.revealed = true;
     this.domElement.classList.add('revealed');
 
-    // Handle first click logic
+    // First-click logic
     if (firstClick) {
-        // Generate bombs after the first click
+        startTimer(); // Start the timer
         bombSpots = generateMinesAfterFirstClick(row, col, tileArray.length, tileArray[0].length);
         populateMines(tileArray, bombSpots);
-        checkNeighborMines(tileArray); // Recalculate adjacent mines
-        firstClick = false; // Disable first-click logic
+        checkNeighborMines(tileArray); // Set adjacent mine counts
+        firstClick = false; // Disable first-click flag
     }
 
+    // Reveal logic
     if (this.mine) {
         this.domElement.classList.add('bomb');
         this.domElement.textContent = '💣';
-        hitMine(); // Trigger game over logic
+        hitMine(); // Trigger game-over logic
     } else if (this.adjacentMines === 0) {
-        this.domElement.textContent = ''; // Blank tile for 0 adjacent mines
-        this.revealAdjacentEmpty(tileArray, row, col); // Reveal adjacent tiles
+        this.domElement.textContent = '';
+        this.revealAdjacentEmpty(tileArray, row, col); // Recursive reveal
     } else {
-        this.domElement.textContent = this.adjacentMines.toString(); // Show number
+        this.domElement.textContent = this.adjacentMines.toString();
     }
 }
 
@@ -77,7 +78,6 @@ class Tile {
           newCol >= 0 && newCol < tileArray[0].length
       ) {
           const neighbor = tileArray[newRow][newCol];
-          console.log(`Revealing tile at (${newRow}, ${newCol})`);
           if (!neighbor.revealed && !neighbor.mine) {
               neighbor.reveal(tileArray, newRow, newCol);
           }
