@@ -8,11 +8,14 @@ let difficulty = 1;
 let timeElapsed = 0; // Tracks elapsed time
 let timeInterval = null; // Reference for the timer interval
 let timerStarted = false; //Tracks if the timer has been started
+let totalFlags = 0; // Track the total number of flags
+const totalMines = 10 * difficulty; // Adjust for difficulty if needed
 
 
 let firstClick = true; // Track if it's the first click
 let bombSpots = []; // Global bomb locations
 let gameOver = false; // Track if the game is over
+let revealedTilesForWin = 0; // Game over logic check for revealed tile count
 
 //Function to update the timer
 //Sets minutes and seconds and elapses time
@@ -39,11 +42,19 @@ function startTimer() {
     
 }
 
+// Function to update the flag count display
+function updateFlagCount() {
+    document.getElementById('flag-count').textContent = `Flags: ${totalFlags}`;
+}
+
 // Function to initialize the game grid
 function initializeGame() {
     gameBoard.innerHTML = ''; // Clear the game board
     firstClick = true; // Reset first-click flag
     gameOver = false; // Reset game-over flag
+    revealedTilesForWin = 0; // initialize Game Win logic when game is started
+    totalFlags = 0; // Reset flags
+    updateFlagCount();
     if (timeInterval) clearInterval(timeInterval); // Clear any existing interval
     document.getElementById('timer').textContent = 'Time: 0:00'; // Reset timer display
     timerStarted = false; 
