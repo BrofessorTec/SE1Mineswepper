@@ -19,22 +19,34 @@ class Tile {
   }  
   
   // method to mark as revealed
-  reveal() {
+  reveal(tileArray, row, col) {
     if (this.revealed || gameOver || this.flagged) return;
-  
+
     this.revealed = true;
-    this.domElement.classList.add('revealed'); // Change color for revealed tiles
-  
-    if (this.mine) {
-      this.domElement.classList.add('bomb');
-      this.domElement.textContent = '💣';
-      hitMine(); // Trigger game-over logic
-    } else if (this.adjacentMines === 0) {
-      this.domElement.textContent = ''; // Blank tile for 0 adjacent mines
-    } else {
-      this.domElement.textContent = this.adjacentMines.toString(); // Show number
+    this.domElement.classList.add('revealed');
+
+    // First-click logic
+    if (firstClick) {
+        startTimer(); // Start the timer
+        bombSpots = generateMinesAfterFirstClick(row, col, tileArray.length, tileArray[0].length);
+        populateMines(tileArray, bombSpots);
+        checkNeighborMines(tileArray); // Set adjacent mine counts
+        firstClick = false; // Disable first-click flag
     }
-  }
+
+    // Reveal logic
+    if (this.mine) {
+        this.domElement.classList.add('bomb');
+        this.domElement.textContent = '💣';
+        hitMine(); // Trigger game-over logic
+    } else if (this.adjacentMines === 0) {
+        this.domElement.textContent = '';
+        this.revealAdjacentEmpty(tileArray, row, col); // Recursive reveal
+    } else {
+        this.domElement.textContent = this.adjacentMines.toString();
+    }
+}
+
 
   // method to mark as flagged
   toggleFlag() {
@@ -49,92 +61,124 @@ class Tile {
       this.domElement.textContent = ''; // Remove the flag emoji
     }
   }
+  revealAdjacentEmpty(tileArray, row, col) {
+    // Directions for adjacent tiles (including diagonals)
+    const directions = [
+        [-1, -1], [-1, 0], [-1, 1],
+        [0, -1],          [0, 1],
+        [1, -1], [1, 0], [1, 1],
+    ];
+
+    directions.forEach(([dx, dy]) => {
+      const newRow = row + dx;
+      const newCol = col + dy;
+  
+      if (
+          newRow >= 0 && newRow < tileArray.length &&
+          newCol >= 0 && newCol < tileArray[0].length
+      ) {
+          const neighbor = tileArray[newRow][newCol];
+          if (!neighbor.revealed && !neighbor.mine) {
+              neighbor.reveal(tileArray, newRow, newCol);
+          }
+      }
+  });
+}
 }
 
 // Function to create 2D array of tiles and plant bombs
 function create2DArray(rows, cols, bombSpots) {
-  const arr = new Array(rows); // creates an array of rows
-  console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // log dimensions
+  const arr = new Array(rows); // Create an array of rows
+
+  console.log(`Creating a 2D array with ${rows} rows and ${cols} columns.`); // Log the dimensions
+
   for (let i = 0; i < rows; i++) {
-    arr[i] = new Array(cols); // create each row array with the number of columns
-    for (let j = 0; j < cols; j++) {
-      arr[i][j] = new Tile(); // assign a new Tile object to each column index
-      if (bombSpots.includes((i + 1) + (j * 10))) {
-        arr[i][j].setMine(); // Sets Mines at the spots generated in Mineswepper.js
-      }
-      arr[i][j].domElement.__tileObj = arr[i][j]; // Link the DOM element to the Tile object
+      arr[i] = new Array(cols); // Create each row array with the number of columns
 
-      // Left-click event to reveal the tile
-      arr[i][j].domElement.addEventListener('click', function () {
-        if (!gameOver) {
-          arr[i][j].reveal();
-          // if the tile revealed is a mine, run the hitMine() function
-          if (arr[i][j].mine) {
-            hitMine();
+      for (let j = 0; j < cols; j++) {
+          const tile = new Tile(); // Create a new Tile object
+          arr[i][j] = tile;
+
+          // Check if the tile's index matches a bomb spot
+          const index = i * cols + j;
+          if (bombSpots.includes(index)) {
+              tile.setMine(); // Set the tile as a mine
           }
-        }
-      });
 
-      // Right-click event to flag the tile
-      arr[i][j].domElement.addEventListener('contextmenu', function (e) {
-        e.preventDefault(); // Prevent the default context menu
-        arr[i][j].toggleFlag(); // Toggle the flag
-      });
+          // Link the DOM element to the Tile object for future reference
+          tile.domElement.__tileObj = tile;
 
-      // Touch events for mobile (press and hold to flag)
-      let touchStartTimer;
-      arr[i][j].domElement.addEventListener('touchstart', function () {
-        arr[i][j].wasLongPress = false; // Reset long press tracker
-        touchStartTimer = setTimeout(() => {
-          arr[i][j].toggleFlag(); // Flag after a long press
-          arr[i][j].wasLongPress = true; // Set long press tracker
-        }, 500); // 500ms for long press
-      });
+          // Add event listeners for revealing and flagging
+          tile.domElement.addEventListener('click', function () {
+              if (!gameOver) {
+                  tile.reveal(arr, i, j); // Reveal the tile
+              }
+          });
 
-      arr[i][j].domElement.addEventListener('touchend', function () {
-        clearTimeout(touchStartTimer); // Clear the timer on touch end
-        // Only reveal if the touch was not a long press for flagging
-        if (!arr[i][j].flagged && !arr[i][j].wasLongPress) {
-          arr[i][j].reveal();
-        }
-      });
+          tile.domElement.addEventListener('contextmenu', function (e) {
+              e.preventDefault(); // Prevent the default context menu
+              if (!gameOver) {
+                  tile.toggleFlag(); // Toggle flag
+              }
+          });
 
-      arr[i][j].domElement.addEventListener('touchcancel', function () {
-        clearTimeout(touchStartTimer); // Clear the timer if the touch is cancelled
-      });
-    }
+          // Add touch events for mobile (press and hold to flag)
+          let touchStartTimer;
+          tile.domElement.addEventListener('touchstart', function () {
+              tile.wasLongPress = false; // Reset long press tracker
+              touchStartTimer = setTimeout(() => {
+                  if (!tile.revealed) {
+                      tile.toggleFlag(); // Flag on long press
+                      tile.wasLongPress = true; // Mark as long press
+                  }
+              }, 500); // 500ms for long press
+          });
+
+          tile.domElement.addEventListener('touchend', function () {
+              clearTimeout(touchStartTimer); // Clear the timer on touch end
+              if (!tile.wasLongPress && !tile.flagged && !gameOver) {
+                  tile.reveal(arr, i, j); // Reveal tile if it wasn't flagged
+              }
+          });
+
+          tile.domElement.addEventListener('touchcancel', function () {
+              clearTimeout(touchStartTimer); // Clear the timer if the touch is canceled
+          });
+      }
   }
+
   return arr;
 }
 
 function checkNeighborMines(tileArray) {
   for (let row = 0; row < gridRows; row++) {
-    for (let col = 0; col < gridCols; col++) {
-        if (!tileArray[row][col].mine) {
-            let mineCount = 0;
-            const directions = [
-                [-1, -1], [-1, 0], [-1, 1],
-                [0, -1],          [0, 1],
-                [1, -1], [1, 0], [1, 1],
-            ];
+      for (let col = 0; col < gridCols; col++) {
+          if (!tileArray[row][col].mine) {
+              let mineCount = 0;
+              const directions = [
+                  [-1, -1], [-1, 0], [-1, 1],
+                  [0, -1],          [0, 1],
+                  [1, -1], [1, 0], [1, 1],
+              ];
 
-            directions.forEach(([dx, dy]) => {
-                const newRow = row + dx;
-                const newCol = col + dy;
-                if (
-                    newRow >= 0 && newRow < gridRows &&
-                    newCol >= 0 && newCol < gridCols &&
-                    tileArray[newRow][newCol].mine
-                ) {
-                    mineCount++;
-                }
-            });
+              directions.forEach(([dx, dy]) => {
+                  const newRow = row + dx;
+                  const newCol = col + dy;
+                  if (
+                      newRow >= 0 && newRow < gridRows &&
+                      newCol >= 0 && newCol < gridCols &&
+                      tileArray[newRow][newCol].mine
+                  ) {
+                      mineCount++;
+                  }
+              });
 
-            tileArray[row][col].setAdjacentMines(mineCount);
-        }
-    }
+              tileArray[row][col].setAdjacentMines(mineCount);
+          }
+      }
   }
 }
+
 
 
 // Export Tile and create2DArray
