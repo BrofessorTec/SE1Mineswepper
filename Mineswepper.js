@@ -146,9 +146,11 @@ function hitMine() {
     });
 }
 
+// Function to update the mine counter based on difficulty
+// Function is called upon any instance of initializeGame
 function updateMineCountInHTML() {
     const mineCount = 10 * difficulty; // Calculate the number of mines based on difficulty
-    const mineCountElement = document.getElementById('mine-count');
+    const mineCountElement = document.getElementById('mine-count'); // Pulls the Mine Count Span from Index
     mineCountElement.textContent = `💣: ${mineCount}`;
 }
 
