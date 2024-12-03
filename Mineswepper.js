@@ -1,164 +1,103 @@
-// Select elements
+// select elements
 const gameBoard = document.getElementById('game-board');
 
-// Game settings
+// game settings
 const gridRows = 10; // 10x10 grid
 const gridCols = 10;
-let difficulty = 1; 
-let timeElapsed = 0; // Tracks elapsed time
-let timeInterval = null; // Reference for the timer interval
-let timerStarted = false; //Tracks if the timer has been started
 
+// function to initialize the game grid (just printing the grid)
+function initializeGame() 
+{
+  gameBoard.innerHTML = '';  // clear the game board
 
-let firstClick = true; // Track if it's the first click
-let bombSpots = []; // Global bomb locations
-let gameOver = false; // Track if the game is over
+  // set the grid template for the CSS grid layout - can be altered later if needed for dynamic game board size
+  gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`; 
+  gameBoard.style.gridTemplateRows = `repeat(${gridRows}, 39px)`;
 
-//Function to update the timer
-//Sets minutes and seconds and elapses time
-//Sets the string for timer and pads the seconds (so that seconds is always 2 digits)
-function updateTimer() {
-    timeElapsed++;
-    const minutes = Math.floor(timeElapsed / 60); // Calculate minutes
-    const seconds = timeElapsed % 60; // Calculate seconds
-    document.getElementById('timer').textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+  difficulty = 1; // 1 is normal, could do 2 is higher etc.. just testing something here
+  bombsCount = 10; // 10 default number of bombs for normal difficulty
+  let bombSpots = []; //create array of bomb locations
 
-    // Stops at 9:59 (599 seconds)
-    if (timeElapsed >= 599) { 
-        clearInterval(timeInterval);
+  if (difficulty == 1) 
+    {
+      //generate 10 bomb locations, can be updated later with different difficulties
+      bombsCount = 10;
+      for (let bombPlanted = 0; bombPlanted < bombsCount; bombPlanted++)
+        {
+          gridMax = gridCols * gridRows;
+          bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
+          while (bombSpots.includes(bombLocation))
+          {
+            //generate another location if there is already a bomb in this spot
+            bombLocation = Math.floor((Math.random() * gridMax) + 1); //cell 1 and 100 test cases passed
+          }
+          bombSpots.push(bombLocation);
+          console.log("Bomb placed at " + bombLocation);
+        } 
     }
-}
 
-//Function to start the timer by setting the interval to 1000 (1 second)
-function startTimer() {
-    timeElapsed = 0;
-    if (!timerStarted) {
-        timerStarted = true;
-        timeInterval = setInterval(updateTimer, 1000); // Calls `updateTimer` every second
+
+  // create the grid cells in the DOM using nested for loops 
+  for (let row = 0; row < gridRows; row++) 
+  {
+    for (let col = 0; col < gridCols; col++) 
+    {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');  // add the CSS class for styling
+      cell.dataset.row = row;
+      cell.dataset.col = col;
+      cell.revealed = false; //using this variable so that cells cannot be clicked multiple times
+
+      // Add event listener for each cell to detect mouse click interaction
+      cell.addEventListener('click', () => {
+        // Adds correct symbol based on game rules
+        if (!cell.revealed)
+        {
+          currentLocation = (row+1)+(col*10);
+          console.log("Current location is " + currentLocation); // cells were generated per column
+
+          if (bombSpots.includes(currentLocation)) //new bomb placement logic
+          {
+            cell.textContent = "💣"
+            cell.classList.add('bomb'); // Apply the 'bomb' class for red background
+          }
+          else
+          {
+            const randomNum = Math.floor(Math.random() * 9); //to be replaced later with game logic
+            cell.textContent = randomNum; //to be replaced later with game logic
+          }
+
+          cell.style.textAlign = 'center'; // Center the text
+          cell.style.fontSize = '24px'; // Adjust font size
+          cell.style.lineHeight = '39px'; // Match the cell height
+          cell.classList.add('revealed'); // Changes the tile color when it is clicked on by adding the css class 'revealed'
+          cell.revealed = true;
+        }
+      });
+
+
+      
+      gameBoard.appendChild(cell);
     }
     
+  }
+
 }
 
-// Function to initialize the game grid
-function initializeGame() {
-    gameBoard.innerHTML = ''; // Clear the game board
-    firstClick = true; // Reset first-click flag
-    gameOver = false; // Reset game-over flag
-    if (timeInterval) clearInterval(timeInterval); // Clear any existing interval
-    document.getElementById('timer').textContent = 'Time: 0:00'; // Reset timer display
-    timerStarted = false; 
-
-    // Set the grid template for the CSS grid layout
-    gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`;
-    gameBoard.style.gridTemplateRows = `repeat(${gridRows}, 39px)`;
-
-    // Initialize the game grid without mines
-    const tileArray = createEmptyGrid(gridRows, gridCols);
-
-    tileArray.forEach((row, rowIndex) => {
-        row.forEach((tile, colIndex) => {
-            gameBoard.appendChild(tile.domElement);
-
-            tile.domElement.addEventListener('click', () => {
-                if (gameOver) return;
-
-                if (firstClick) {
-                    startTimer(); //Starts timer on the first click
-                    // Generate mines avoiding the first clicked tile
-                    bombSpots = generateMinesAfterFirstClick(rowIndex, colIndex, gridRows, gridCols);
-                    populateMines(tileArray, bombSpots);
-                    checkNeighborMines(tileArray);
-                    firstClick = false;
-                }
-
-                // Reveal the clicked tile
-                tile.reveal(tileArray, rowIndex, colIndex);
-            });
-        });
-    });
-}
-
-// Create an empty grid with no mines
-function createEmptyGrid(rows, cols) {
-    return create2DArray(rows, cols, []); // Utilize the `create2DArray` function from Tile.js
-}
-
-// Generate mines, avoiding the first clicked tile and its neighbors
-function generateMinesAfterFirstClick(row, col, rows, cols) {
-    const excludedTiles = getExcludedTiles(row, col, rows, cols);
-    const bombSpots = [];
-    const totalCells = rows * cols;
-    const bombCount = 10 * difficulty; // Adjust for difficulty if needed
-
-    while (bombSpots.length < bombCount) {
-        const bombLocation = Math.floor(Math.random() * totalCells);
-        if (!excludedTiles.includes(bombLocation) && !bombSpots.includes(bombLocation)) {
-            bombSpots.push(bombLocation);
-        }
-    }
-
-    return bombSpots;
-}
-
-
-// Get tiles to exclude from bomb placement (clicked tile and neighbors)
-function getExcludedTiles(row, col, rows, cols) {
-    const excluded = [];
-    for (let i = -1; i <= 1; i++) {
-        for (let j = -1; j <= 1; j++) {
-            const newRow = row + i;
-            const newCol = col + j;
-            if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
-                excluded.push(newRow * cols + newCol);
-            }
-        }
-    }
-    return excluded;
-}
-
-
-// Populate the grid with mines based on bombSpots
-function populateMines(tileArray, bombSpots) {
-    bombSpots.forEach((bombIndex) => {
-        const row = Math.floor(bombIndex / gridCols);
-        const col = bombIndex % gridCols;
-        tileArray[row][col].setMine();
-    });
-}
-
-
-// End the game when revealing a mine tile
-function hitMine() {
-    gameOver = true;
-    timerStarted = false;
-    clearInterval(timeInterval); //Stops timer when bomb is hit
-    console.log("Game Over triggered!");
-
-    // Reveal all bombs
-    const tiles = document.querySelectorAll('.cell');
-    tiles.forEach((tile) => {
-        const tileObj = tile.__tileObj; // Retrieve the tile
-        if (tileObj && tileObj.mine) {
-            tile.textContent = '💣'; // Show the bomb icon
-            tile.classList.add('bomb', 'revealed'); // Apply the bomb and revealed styles
-        }
-        tile.style.pointerEvents = 'none'; // Disable further clicks on all tiles
-    });
-}
-
-// Restart game functionality
+// Function to restart the game
 function restartGame() {
-    console.log("Game restarted");
-    initializeGame();
+  // Clear and reinitialize the game board
+  console.log("Game restarted");
+  initializeGame();
 }
 
-// Add restart button functionality
+// Add this restart functionality to the "Restart Game" button
 document.getElementById("restart-button").addEventListener("click", restartGame);
 
-// Initialize the game grid on page load
+// call initializegame to create the grid
 initializeGame();
 
-// Export for tests but ignore `module` in dev tools where it's dependent on Node
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { generateMinesAfterFirstClick, initializeGame, restartGame };
-}
+
+
+
+
