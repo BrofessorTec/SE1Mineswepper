@@ -15,6 +15,7 @@ const totalMines = 10 * difficulty; // Adjust for difficulty if needed
 let firstClick = true; // Track if it's the first click
 let bombSpots = []; // Global bomb locations
 let gameOver = false; // Track if the game is over
+let revealedTilesForWin = 0; // Game over logic check for revealed tile count
 
 //Function to update the timer
 //Sets minutes and seconds and elapses time
@@ -51,6 +52,7 @@ function initializeGame() {
     gameBoard.innerHTML = ''; // Clear the game board
     firstClick = true; // Reset first-click flag
     gameOver = false; // Reset game-over flag
+    revealedTilesForWin = 0; // initialize Game Win logic when game is started
     totalFlags = 0; // Reset flags
     updateFlagCount();
     if (timeInterval) clearInterval(timeInterval); // Clear any existing interval
