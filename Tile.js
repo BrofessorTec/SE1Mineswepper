@@ -56,10 +56,13 @@ class Tile {
     if (this.flagged) {
       this.domElement.classList.add('flagged');
       this.domElement.textContent = '🚩'; // Show a flag emoji
+      totalFlags++;
     } else {
       this.domElement.classList.remove('flagged');
       this.domElement.textContent = ''; // Remove the flag emoji
+      totalFlags--;
     }
+    updateFlagCount(); // Update the flag count in the UI
   }
   revealAdjacentEmpty(tileArray, row, col) {
     // Directions for adjacent tiles (including diagonals)
