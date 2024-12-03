@@ -1,7 +1,7 @@
 /* style.css
-    Author:         Scotty Snyder, Chris Powers, Nathan Mink (if you add to this file in the future just add your name here and update last revised)	      			
+    Author:         Scotty Snyder, Chris Powers, Nathan Mink, Gavin Frisby (if you add to this file in the future just add your name here and update last revised)	      			
     Date:		    11/14/24
-    Last revised:   11/25/24
+    Last revised:   12/3/24
     Description:    Mineswepper stylesheet
 */
 
@@ -166,12 +166,21 @@ h1 {
     margin-top: 20px; /* Add space between the timer and other elements */
 }
 
+
+  #mine-count {
+    display: block; /* Ensure the Mine Count is a block-level element */
+    text-align: center; /* Center the text */
+    font-size: 22px;
+    color: #333;
+    margin-top: 10px;
+}
+
 #flag-count {
     display: block; /* Ensure the Flag Count is a block-level element */
     text-align: center; /* Center the text */
     font-size: 28px;
     color: #333;
-    margin-top: 10px; /* Add space between the other elements */
+    margin-top: 20px; /* Add space between the other elements */
 }
 
   .cell.flagged {
