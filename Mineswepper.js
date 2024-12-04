@@ -90,6 +90,8 @@ function initializeGame() {
             });
         });
     });
+    updateMineCountInHTML();
+
 }
 
 // Create an empty grid with no mines
@@ -173,13 +175,6 @@ function updateMineCountInHTML() {
     mineCountElement.textContent = `💣: ${mineCount}`;
 }
 
-// Function to update the mine counter based on difficulty
-// Function is called upon any instance of initializeGame
-function updateMineCountInHTML() {
-    const mineCount = 10 * difficulty; // Calculate the number of mines based on difficulty
-    const mineCountElement = document.getElementById('mine-count'); // Pulls the Mine Count Span from Index
-    mineCountElement.textContent = `💣: ${mineCount}`;
-}
 
 // Restart game functionality
 function restartGame() {
@@ -191,7 +186,6 @@ function restartGame() {
     updateMineCountInHTML();
 
 }
-updateMineCountInHTML();
 
 function checkGameOver(tileArray) {
     const totalTiles = gridRows * gridCols;
@@ -215,13 +209,6 @@ function checkGameOver(tileArray) {
 }
 
 
-function displayEndGameUI() {
-    // Show the name input field after game ends
-    document.getElementById("nameInput").style.display = 'block';
-    document.querySelector(".name-button").style.display = 'block'; // Show the Save Name button
-}
-
-
 
 function saveName() {
     const userName = document.getElementById("nameInput").value.trim();
@@ -241,7 +228,7 @@ document.getElementById("restart-button").addEventListener("click", restartGame)
 
 // Initialize the game grid on page load
 initializeGame();
-updateMineCountInHTML();
+
 
 // Export for tests but ignore `module` in dev tools where it's dependent on Node
 if (typeof module !== 'undefined' && module.exports) {

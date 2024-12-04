@@ -61,6 +61,7 @@ class Tile {
         timerStarted = false;
         // timer stop
         clearInterval(timeInterval); 
+        displayEndGameUI()
         //score = document.getElementById('timer').textContent; //will be sent with username for leaderboard
         console.log("Game Over, you win! " + document.getElementById('timer').textContent);
     }
@@ -68,6 +69,7 @@ class Tile {
     {
         revealedTilesForWin++;
         console.log("Currently revealed tiles count: " + revealedTilesForWin);
+        
     }
   }
 
@@ -110,6 +112,11 @@ class Tile {
       }
   });
 }
+}
+function displayEndGameUI() {
+    // Show the name input field after game ends
+    document.getElementById("nameInput").style.display = 'block';
+    document.querySelector(".name-button").style.display = 'block'; // Show the Save Name button
 }
 
 // Function to create 2D array of tiles and plant bombs
