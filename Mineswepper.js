@@ -72,21 +72,26 @@ function initializeGame() {
 
             tile.domElement.addEventListener('click', () => {
                 if (gameOver) return;
-
+            
                 if (firstClick) {
-                    startTimer(); //Starts timer on the first click
+                    startTimer(); // Starts timer on the first click
                     // Generate mines avoiding the first clicked tile
                     bombSpots = generateMinesAfterFirstClick(rowIndex, colIndex, gridRows, gridCols);
                     populateMines(tileArray, bombSpots);
                     checkNeighborMines(tileArray);
                     firstClick = false;
                 }
-
+            
                 // Reveal the clicked tile
                 tile.reveal(tileArray, rowIndex, colIndex);
+            
+                // Check for game over condition (win or bomb hit)
+                checkGameOver(tileArray);
             });
         });
     });
+    updateMineCountInHTML();
+
 }
 
 // Create an empty grid with no mines
@@ -134,6 +139,7 @@ function populateMines(tileArray, bombSpots) {
         const row = Math.floor(bombIndex / gridCols);
         const col = bombIndex % gridCols;
         tileArray[row][col].setMine();
+        console.log(row,col)
     });
 }
 
@@ -155,6 +161,10 @@ function hitMine() {
         }
         tile.style.pointerEvents = 'none'; // Disable further clicks on all tiles
     });
+
+    // Show the name input field after game ends
+    document.getElementById("nameInput").style.display = 'block';
+    document.querySelector(".name-button").style.display = 'block';
 }
 
 // Function to update the mine counter based on difficulty
@@ -165,19 +175,60 @@ function updateMineCountInHTML() {
     mineCountElement.textContent = `💣: ${mineCount}`;
 }
 
+
 // Restart game functionality
 function restartGame() {
     console.log("Game restarted");
     initializeGame();
+    // Hide the name input field and save button after restarting the game
+    document.getElementById("nameInput").style.display = 'none';
+    document.querySelector(".name-button").style.display = 'none';
     updateMineCountInHTML();
+
 }
+
+function checkGameOver(tileArray) {
+    const totalTiles = gridRows * gridCols;
+    const bombCount = bombSpots.length;
+    let revealedNonBombCount = 0;
+
+    tileArray.forEach(row => {
+        row.forEach(tile => {
+            if (tile.revealed && !tile.mine) {
+                revealedNonBombCount++;
+            }
+        });
+    });
+
+    // If all non-bomb tiles are revealed or a bomb is hit, end the game
+    if (revealedNonBombCount === (totalTiles - bombCount) || gameOver) {
+        // Trigger game over (either win or loss)
+        gameOver = true;
+        displayEndGameUI();
+    }
+}
+
+
+
+function saveName() {
+    const userName = document.getElementById("nameInput").value.trim();
+
+    if (userName.length === 3) {
+        localStorage.setItem('minesweeperUsername', userName);
+
+        console.log(userName);
+    } else {
+        alert("Please enter exactly 3 characters for your name.");
+    }
+}
+
 
 // Add restart button functionality
 document.getElementById("restart-button").addEventListener("click", restartGame);
 
 // Initialize the game grid on page load
 initializeGame();
-updateMineCountInHTML();
+
 
 // Export for tests but ignore `module` in dev tools where it's dependent on Node
 if (typeof module !== 'undefined' && module.exports) {
