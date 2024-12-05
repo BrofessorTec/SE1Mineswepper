@@ -62,6 +62,8 @@ class Tile {
         // timer stop
         clearInterval(timeInterval); 
         displayEndGameUI()
+
+        document.getElementById('reveal-count').textContent = "Revealed: 90";
         //score = document.getElementById('timer').textContent; //will be sent with username for leaderboard
         console.log("Game Over, you win! " + document.getElementById('timer').textContent);
     }
@@ -70,6 +72,7 @@ class Tile {
         revealedTilesForWin++;
         console.log("Currently revealed tiles count: " + revealedTilesForWin);
         
+        document.getElementById('reveal-count').textContent = `Revealed: ${String(revealedTilesForWin).padStart(2, '0')}`;   
     }
   }
 

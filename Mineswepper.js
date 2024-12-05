@@ -201,7 +201,7 @@ function checkGameOver(tileArray) {
         });
     });
 
-    document.getElementById('reveal-count').textContent = `Revealed: ${String(revealedNonBombCount).padStart(2, '0')}`; //Updates revealed bomb count in UI
+    
 
     // If all non-bomb tiles are revealed or a bomb is hit, end the game
     if (revealedNonBombCount === (totalTiles - bombCount) || gameOver) {
