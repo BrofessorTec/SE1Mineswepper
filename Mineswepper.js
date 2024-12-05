@@ -44,7 +44,7 @@ function startTimer() {
 
 // Function to update the flag count display
 function updateFlagCount() {
-    document.getElementById('flag-count').textContent = `Flags: ${totalFlags}`;
+    document.getElementById('flag-count').textContent = `🚩: ${totalFlags}`;
 }
 
 // Function to initialize the game grid
@@ -58,6 +58,7 @@ function initializeGame() {
     if (timeInterval) clearInterval(timeInterval); // Clear any existing interval
     document.getElementById('timer').textContent = 'Time: 0:00'; // Reset timer display
     timerStarted = false; 
+    document.getElementById('reveal-count').textContent = 'Revealed: 00'; //Reset reveal count
 
     // Set the grid template for the CSS grid layout
     gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`;
@@ -199,6 +200,8 @@ function checkGameOver(tileArray) {
             }
         });
     });
+
+    document.getElementById('reveal-count').textContent = `Revealed: ${String(revealedNonBombCount).padStart(2, '0')}`; //Updates revealed bomb count in UI
 
     // If all non-bomb tiles are revealed or a bomb is hit, end the game
     if (revealedNonBombCount === (totalTiles - bombCount) || gameOver) {
