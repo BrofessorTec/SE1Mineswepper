@@ -8,11 +8,14 @@ let difficulty = 1;
 let timeElapsed = 0; // Tracks elapsed time
 let timeInterval = null; // Reference for the timer interval
 let timerStarted = false; //Tracks if the timer has been started
+let totalFlags = 0; // Track the total number of flags
+const totalMines = 10 * difficulty; // Adjust for difficulty if needed
 
 
 let firstClick = true; // Track if it's the first click
 let bombSpots = []; // Global bomb locations
 let gameOver = false; // Track if the game is over
+let revealedTilesForWin = 0; // Game over logic check for revealed tile count
 
 //Function to update the timer
 //Sets minutes and seconds and elapses time
@@ -39,14 +42,23 @@ function startTimer() {
     
 }
 
+// Function to update the flag count display
+function updateFlagCount() {
+    document.getElementById('flag-count').textContent = `🚩: ${totalFlags}`;
+}
+
 // Function to initialize the game grid
 function initializeGame() {
     gameBoard.innerHTML = ''; // Clear the game board
     firstClick = true; // Reset first-click flag
     gameOver = false; // Reset game-over flag
+    revealedTilesForWin = 0; // initialize Game Win logic when game is started
+    totalFlags = 0; // Reset flags
+    updateFlagCount();
     if (timeInterval) clearInterval(timeInterval); // Clear any existing interval
     document.getElementById('timer').textContent = 'Time: 0:00'; // Reset timer display
     timerStarted = false; 
+    document.getElementById('reveal-count').textContent = 'Revealed: 00'; //Reset reveal count
 
     // Set the grid template for the CSS grid layout
     gameBoard.style.gridTemplateColumns = `repeat(${gridCols}, 39px)`;
@@ -61,21 +73,26 @@ function initializeGame() {
 
             tile.domElement.addEventListener('click', () => {
                 if (gameOver) return;
-
+            
                 if (firstClick) {
-                    startTimer(); //Starts timer on the first click
+                    startTimer(); // Starts timer on the first click
                     // Generate mines avoiding the first clicked tile
                     bombSpots = generateMinesAfterFirstClick(rowIndex, colIndex, gridRows, gridCols);
                     populateMines(tileArray, bombSpots);
                     checkNeighborMines(tileArray);
                     firstClick = false;
                 }
-
+            
                 // Reveal the clicked tile
                 tile.reveal(tileArray, rowIndex, colIndex);
+            
+                // Check for game over condition (win or bomb hit)
+                checkGameOver(tileArray);
             });
         });
     });
+    updateMineCountInHTML();
+
 }
 
 // Create an empty grid with no mines
@@ -123,6 +140,7 @@ function populateMines(tileArray, bombSpots) {
         const row = Math.floor(bombIndex / gridCols);
         const col = bombIndex % gridCols;
         tileArray[row][col].setMine();
+        console.log(row,col)
     });
 }
 
@@ -144,19 +162,76 @@ function hitMine() {
         }
         tile.style.pointerEvents = 'none'; // Disable further clicks on all tiles
     });
+
+    // Show the name input field after game ends
+    document.getElementById("nameInput").style.display = 'block';
+    document.querySelector(".name-button").style.display = 'block';
 }
+
+// Function to update the mine counter based on difficulty
+// Function is called upon any instance of initializeGame
+function updateMineCountInHTML() {
+    const mineCount = 10 * difficulty; // Calculate the number of mines based on difficulty
+    const mineCountElement = document.getElementById('mine-count'); // Pulls the Mine Count Span from Index
+    mineCountElement.textContent = `💣: ${mineCount}`;
+}
+
 
 // Restart game functionality
 function restartGame() {
     console.log("Game restarted");
     initializeGame();
+    // Hide the name input field and save button after restarting the game
+    document.getElementById("nameInput").style.display = 'none';
+    document.querySelector(".name-button").style.display = 'none';
+    updateMineCountInHTML();
+
 }
+
+function checkGameOver(tileArray) {
+    const totalTiles = gridRows * gridCols;
+    const bombCount = bombSpots.length;
+    let revealedNonBombCount = 0;
+
+    tileArray.forEach(row => {
+        row.forEach(tile => {
+            if (tile.revealed && !tile.mine) {
+                revealedNonBombCount++;
+            }
+        });
+    });
+
+    
+
+    // If all non-bomb tiles are revealed or a bomb is hit, end the game
+    if (revealedNonBombCount === (totalTiles - bombCount) || gameOver) {
+        // Trigger game over (either win or loss)
+        gameOver = true;
+        displayEndGameUI();
+    }
+}
+
+
+
+function saveName() {
+    const userName = document.getElementById("nameInput").value.trim();
+
+    if (userName.length === 3) {
+        localStorage.setItem('minesweeperUsername', userName);
+
+        console.log(userName);
+    } else {
+        alert("Please enter exactly 3 characters for your name.");
+    }
+}
+
 
 // Add restart button functionality
 document.getElementById("restart-button").addEventListener("click", restartGame);
 
 // Initialize the game grid on page load
 initializeGame();
+
 
 // Export for tests but ignore `module` in dev tools where it's dependent on Node
 if (typeof module !== 'undefined' && module.exports) {

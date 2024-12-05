@@ -20,6 +20,14 @@
   <div class="controls">
    <button id="restart-button">Restart Game</button>
    <span id="timer">Time: 0:00</span>
+
+   <span id="mine-count">💣: 0</span>
+
+   <span id="reveal-count">Revealed: 00</span>
+
+   <span id="flag-count">🚩: 0</span>
+
+
   </div>
 
     </div>
@@ -29,19 +37,21 @@
     </div>
     <!-- div for more UI at the bottom of the frame-->
     <div class="bottom">
-
+      <input type="text" id="nameInput" maxlength="3" placeholder="Enter 3-character name" style="display: none;">
+      <button onclick="saveName()" class="name-button" style="display: none;">Save Name</button>
     </div>
   </div>
 
   <!-- Temporary button to get to ruleset page until it goes into the navbar -->
-  <div class="temporary-button-container">
+
+  <!-- <div class="temporary-button-container">
     <button class="nav-button" onclick="window.location.href='rules.html'">
       Temporary Ruleset Button
     </button>
-  </div>
+  </div> -->
   
   <p class="group-name">
-    Christian Rock, Scotty Snyder, Tyler Campbell, Gavin Frisby, Zach Farmer, Chris Powers, and Nathan Mink
+    Credits: Chris Oaks, Curtis Reece, Christian Rock, Scotty Snyder, Tyler Campbell, Gavin Frisby, Zach Farmer, Chris Powers, and Nathan Mink
   </p>
   
   <script src="Tile.js"></script>  
